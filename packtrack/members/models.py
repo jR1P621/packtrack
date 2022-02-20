@@ -1,16 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class Member(models.Model):
     member_user_account = models.OneToOneField(User, on_delete=models.CASCADE)
     member_avatar = models.ImageField(null=True)
-    # member_kennels = models.ManyToManyField('kennels.Kennel',
-    #                                         through='kennels.KennelMembership')
     member_hash_name = models.CharField(max_length=64)
     member_email = models.EmailField(null=True)
-    # member_membership_requests = models.ManyToManyField(
-    #     'kennels.Kennel', through='MembershipRequest')
 
 
 class MemberURLs(models.Model):
@@ -36,3 +34,13 @@ class InviteCode(models.Model):
                                         on_delete=models.SET_NULL,
                                         null=True,
                                         related_name='invite_receiver')
+
+
+# create associated member object when user account is created
+@receiver(post_save, sender=User)
+def create_member(sender, instance, created, **kwargs):
+    if created:
+        Member.objects.create(
+            member_user_account=instance,
+            member_hash_name=instance.username,
+        )
