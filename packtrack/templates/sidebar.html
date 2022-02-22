@@ -1,43 +1,71 @@
-{% extends 'index.html' %}   
+<!-- Left column -->
+<div class="templatemo-sidebar">
+  <header class="templatemo-site-header">
+    <div class="square"></div>
+    <h1>PackTRAK</h1>
+  </header>
+  {% if user.member.member_avatar %}
+  <div class="profile-photo-container">
+    <img src={{user.member.member_avatar}} alt="Profile Photo" class="img-responsive">
+    <div class="profile-photo-overlay"></div>
+  </div>
+  {% endif %}
 
-{% block page %}
-    <div class="templatemo-flex-row">
-    <!-- Left column -->
-      <div class="templatemo-sidebar">
-        <header class="templatemo-site-header">
-          <div class="square"></div>
-          <h1>PackTRAK</h1>
-        </header>
-        {% if user.member.member_avatar %}
-        <div class="profile-photo-container">
-          <img src={{user.member.member_avatar}} alt="Profile Photo" class="img-responsive">  
-          <div class="profile-photo-overlay"></div>
-        </div>  
-        {% endif %}
-            
-        <!-- Search box -->
-        <form class="templatemo-search-form" role="search">
-          <div class="input-group">
-              <button type="submit" class="fa fa-search"></button>
-              <input type="text" class="form-control" placeholder="Search" name="srch-term" id="srch-term">           
-          </div>
-        </form>
-        <div class="mobile-menu-icon">
-            <i class="fa fa-bars"></i>
-        </div>
-        <nav class="templatemo-left-nav">          
-          <ul>
-            <li><a href="#" class="active"><i class="fa fa-home fa-fw"></i>Dashboard</a></li>
-            <li><a href="data-visualization.html"><i class="fa fa-bar-chart fa-fw"></i>Charts</a></li>
-            <li><a href="data-visualization.html"><i class="fa fa-database fa-fw"></i>Data Visualization</a></li>
-            <li><a href="maps.html"><i class="fa fa-map-marker fa-fw"></i>Maps</a></li>
-            <li><a href="manage-users.html"><i class="fa fa-users fa-fw"></i>Manage Users</a></li>
-            <li><a href="preferences.html"><i class="fa fa-sliders fa-fw"></i>Preferences</a></li>
-            <li><a href="login.html"><i class="fa fa-eject fa-fw"></i>Sign Out</a></li>
-          </ul>  
-        </nav>
-      </div>
-      {% block content %}{% endblock content %}
+  {% comment %}
+  <!-- Search box -->
+  <form class="templatemo-search-form" role="search">
+    <div class="input-group">
+      <button type="submit" class="fa fa-search"></button>
+      <input type="text" class="form-control" placeholder="Search" name="srch-term" id="srch-term">
     </div>
-{% endblock page %}
+  </form> {% endcomment %}
+  <div class="mobile-menu-icon">
+    <i class="fa fa-bars"></i>
+  </div>
+  <nav class="templatemo-left-nav">
+    <ul>
+      <li>
+        {% if active_link == 'dashboard' %}
+        <a href="#" class="active">
+          {% else %} <a href="/">
+            {% endif %}
+            <i class="fa fa-bar-chart fa-fw"></i>Dashboard
+          </a>
+      </li>
+      <li>
+        {% if active_link == 'profile' %}
+        <a href="#" class="active">
+          {% else %} <a href="/members/{{user.username}}">
+            {% endif %}
+            <i class="fa fa-user fa-fw"></i>My Profile
+          </a>
+      </li>
+      <li>
+        {% if active_link == 'mykennels' %}
+        <a href="#" class="active">
+          {% else %} <a href="/kennels/mykennels">
+            {% endif %}
+            <i class="fa fa-home fa-fw"></i>My Kennels
+          </a>
+      </li>
+      <li>
+        {% if active_link == 'members' %}
+        <a href="#" class="active">
+          {% else %} <a href="/members">
+            {% endif %}
+            <i class="fa fa-users fa-fw"></i>Browse Members
+          </a>
+      </li>
+      <li>
+        {% if active_link == 'kennels' %}
+        <a href="#" class="active">
+          {% else %} <a href="/kennels">
+            {% endif %}
+            <i class="fa fa-search fa-fw"></i>Browse Kennels
+          </a>
+      </li>
 
+      <li><a href="/accounts/logout?next=/"><i class="fa fa-eject fa-fw"></i>Sign Out</a></li>
+    </ul>
+  </nav>
+</div>

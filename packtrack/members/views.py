@@ -1,40 +1,95 @@
+import base64
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.contrib import messages
-from django.contrib.auth.forms import UserCreationForm
-from . import models
-# from models import Member
+from .forms import UserCreationInviteForm
+from django.contrib.auth.models import User
+from .models import InviteCode, Member
+from django.http import JsonResponse
+from django.core import serializers
+from random import getrandbits
+from django.contrib.auth import login
 
 
 def view_register(request):
     if request.method == 'POST':
-        f = UserCreationForm(request.POST)
+        f = UserCreationInviteForm(request.POST)
         if f.is_valid():
-            f.save()
+            print(Member.objects.all())
+            user = f.save()
             messages.success(request, 'Account created successfully')
-            return HttpResponseRedirect(reverse('login'))
+            login(request, user)
+            return HttpResponseRedirect('/')
 
     else:
-        f = UserCreationForm()
+        f = UserCreationInviteForm()
 
     return render(request, 'register.html', {'form': f})
 
 
 @login_required
-def view_profile(request):
-    return HttpResponse(f"{request.user.username} Profile")
+def view_profile(request, username):
+    try:
+        user = User.objects.get(username=username)
+        member = Member.objects.get(member_user_account=user)
+    except User.DoesNotExist:
+        return HttpResponseRedirect(reverse('members'))
+    else:
+        return render(request, 'members/profile/profile.html',
+                      {'member': member})
 
 
 @login_required
 def view_dashboard(request):
     try:
-        models.Member.objects.get(member_user_account=request.user)
-    except models.Member.DoesNotExist:
-        new_member = models.Member(member_user_account=request.user,
-                                   member_hash_name=request.user.username)
-        new_member.save()
-        return HttpResponseRedirect(reverse('dashboard'))
-    else:
-        return render(request, 'dashboard.html')
+        invites = InviteCode.objects.filter(invite_creator=request.user.member)
+    except InviteCode.DoesNotExist:
+        invites = []
+    return render(request, 'dashboard.html', {'invites': invites})
+
+
+@login_required
+def view_members(request):
+    members = Member.objects.all()
+    return render(request, 'members/member_search_list.html',
+                  {'members': members})
+
+
+@login_required
+def postInvite(request):
+    # request should be ajax and method should be POST.
+    if request.accepts("application/json") and request.method == "POST":
+        # only allow a certain number of open invites at a time
+        invite_limit = 20
+        open_count = InviteCode.objects.filter(
+            invite_creator=request.user.member,
+            invite_receiver__isnull=True).count()
+        if open_count >= invite_limit:
+            return JsonResponse(
+                {"error": f"Open invites exceeds limit ({invite_limit})"},
+                status=400)
+        # save the data and after fetch the object in instance
+        while True:
+            new_code_int = getrandbits(48)
+            new_code = base64.b64encode(new_code_int.to_bytes(
+                6, 'big')).decode("utf-8")
+            try:
+                InviteCode.objects.get(invite_code=new_code)
+            except InviteCode.DoesNotExist:
+                break
+
+        new_invite = InviteCode(
+            invite_creator=request.user.member,
+            invite_code=new_code,
+        )
+        new_invite.save()
+        # serialize in new invite object in json
+        ser_invite = serializers.serialize('json', [
+            new_invite,
+        ])
+        # send to client side.
+        return JsonResponse({"instance": ser_invite}, status=200)
+    # some error occured
+    return JsonResponse({"error": ""}, status=400)

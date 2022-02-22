@@ -1,0 +1,36 @@
+<!-- Top bar -->
+
+<div class="templatemo-top-nav-container">
+    <div class="row">
+        <nav class="templatemo-top-nav col-lg-12 col-md-12">
+            <ul class="text-uppercase">
+                <li>
+                    {% if request.get_full_path == '/kennels/' or request.get_full_path == '/kennels/mykennels' %}
+                    <a href="/kennels" class="active">
+                        {% else %} <a href="/kennels">
+                            {% endif %}
+                            Browse Kennels</a>
+                </li>
+
+                {% for member_kennel in member.member_kennels.all %}
+                <li>
+                    {% if kennel.id != member_kennel.id %}
+                    <a href="#" class="active">
+                        {% else %} <a href="kennels/profile/{member_kennel.name}">
+                            {% endif %}
+                            {{ kennel.abbr }}</a>
+                </li>
+
+
+                {% endfor %}
+                <li>
+                    {% if request.get_full_path == '/create_kennel' %}
+                    <a href="#" class="active">
+                        {% else %} <a href="create_kennel">
+                            {% endif %}
+                            Create New Kennel</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>

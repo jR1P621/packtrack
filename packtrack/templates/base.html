@@ -2,10 +2,11 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">  
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>PackTRAK</title>
     <meta name="description" content="">
     <meta name="author" content="templatemo">
@@ -13,11 +14,12 @@
     Visual Admin Template
     https://templatemo.com/tm-455-visual-admin
     -->
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,400italic,700" rel="stylesheet" type="text/css">    
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,400italic,700" rel="stylesheet"
+      type="text/css">
     <link href="{%static 'css/font-awesome.min.css' %}" rel="stylesheet">
     <link href="{%static 'css/bootstrap.min.css'%}" rel="stylesheet">
     <link href="{%static 'css/templatemo-style.css'%}" rel="stylesheet">
-    
+
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -27,4 +29,64 @@
 
   </head>
   {% block body %}{% endblock body %}
+
+  {% block javascript %}
+  <script>
+    function tableFunction() {
+      // Declare variables
+      var input, filter, table, tr, td, i, txtValue;
+      input = document.getElementById("tableInput");
+      filter = input.value.toUpperCase();
+      table = document.getElementById("filterTable");
+      trs = table.getElementsByTagName("tr");
+      // Loop through all table rows, and hide those who don't match the search query
+      for (let tr of trs) {
+        tds = tr.getElementsByTagName("td");
+        for (let td of tds) {
+          tr.style.display = "none";
+          txtValue = td.textContent || td.innerText;
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            tr.style.display = "";
+            break
+          }
+        }
+      }
+    }
+
+    /*
+        On submiting the form, send the POST ajax
+        request to server and after successfull submission
+        display the object.
+    */
+    function create_invite() {
+      // make POST ajax call
+      $.ajax({
+        type: 'POST',
+        url: "{% url 'post_invite' %}",
+        data: {
+          csrfmiddlewaretoken: '{{ csrf_token }}'
+        },
+        success: function (response) {
+          // on successfull creating object
+          // display the newly friend to table.
+          var instance = JSON.parse(response["instance"])[0];
+          var fields = instance["fields"]
+          $("#filterTable tbody").prepend(
+            `<tr> 
+              <td>${fields["invite_code"]||""}</td>
+              <td>${fields["invite_expiration"]||""}</td>
+              <td></td>
+            </tr>`
+          )
+        },
+        error: function (response) {
+          // alert the error if any error occured
+          alert(response["responseJSON"]["error"]);
+        }
+      })
+    }
+
+  </script>
+  {% endblock javascript %}
+
 </html>

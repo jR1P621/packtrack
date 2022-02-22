@@ -1,0 +1,49 @@
+{% extends 'kennels/kennels_base.html' %}
+{% block sidebar %}
+{% if request.get_full_path == '/kennels/mykennels'%}
+{% include 'sidebar.html' with active_link='mykennels' %}
+{% else %}
+{% include 'sidebar.html' with active_link='kennels' %}
+{% endif %}
+{% endblock sidebar %}
+{% block content %}
+
+<div class="col-1">
+    <div class="panel panel-default templatemo-content-widget white-bg no-padding templatemo-overflow-hidden">
+        <div class="{{color}}-bg panel-body templatemo-position-relative">
+            <h2 class="text-uppercase">{{title}}</h2>
+        </div>
+        <input class='form-control' type="text" id="tableInput" onkeyup="tableFunction()"
+            placeholder="Search by kennel name or location..">
+        <div class="table-responsive">
+            <table id='filterTable' class="table table-striped table-bordered">
+                <thead>
+                    <tr class="header">
+                        <th class='col-lg-1'>Name</th>
+                        <th class='col-sm-1'></th>
+                        <th class='col-lg-1 hidden-xs'>City</th>
+                        <th class='col-lg-1 hidden-xs'>State/Region</th>
+                        <th class='col-lg-1 hidden-xs'>Country</th>
+                        <th class='col-lg-1 visible-xs'>Location</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for kennel in kennels %}
+                    <tr>
+                        <td><a href="kennels/{{kennel.kennel_name}}">{{ kennel.kennel_name }}</a></td>
+                        <td>{{ kennel.kennel_abbr }}</td>
+                        <td>{{ kennel.kennel_city.name }}</td>
+                        <td>{{ kennel.kennel_city.region.name }}</td>
+                        <td>{{ kennel.kennel_city.country.name }}</td>
+                        <td>{{ kennel.kennel_city.display_name }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock content %}

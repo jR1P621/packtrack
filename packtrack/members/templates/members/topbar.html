@@ -1,0 +1,31 @@
+<!-- Top bar -->
+
+<div class="templatemo-top-nav-container">
+    <div class="row">
+        <nav class="templatemo-top-nav col-lg-12 col-md-12">
+            <ul class="text-uppercase">
+                <li>
+                    {% if member.id != user.member.id %}
+                    <a href="/members" class="active">
+                        {% else %} <a href="/members">
+                            {% endif %}
+                            Members</a>
+                </li>
+                <li>
+                    {% if member.id == user.member.id %}
+                    <a href="#" class="active">
+                        {% else %} <a href="/members/{{user.username}}">
+                            {% endif %}
+                            My Profile</a>
+                </li>
+                <li>
+                    {% if request.get_full_path == '/edit_profile' %}
+                    <a href="#" class="active">
+                        {% else %} <a href="/edit_profile">
+                            {% endif %}
+                            Edit Profile</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>

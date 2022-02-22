@@ -1,9 +1,73 @@
-{% block title %}Create an Account{% endblock %}
+{% extends 'base.html' %}
 
-{% block content %}
-    <form method="POST" class="form-group">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-success">Register</button>
-    </form>
-{% endblock %} 
+{% block body %}
+
+<body class="light-gray-bg">
+    <div class="templatemo-content-widget templatemo-login-widget white-bg">
+        <header class="text-center">
+            <h1>Create New Account</h1>
+        </header>
+
+        {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+        <p class="errornote">
+            {{ error }}
+        </p>
+        {% endfor %}
+        {% endif %}
+
+        <form method="post" class="templatemo-login-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <div class="errornote alert-danger">
+                    {{ form.username.errors }}
+                </div>
+                <div class="input-group">
+                    <div class="input-group-addon"><i class="fa fa-user fa-fw"></i></div>
+                    <input type="text" name="username" class="form-control" placeholder="hashname">
+                </div>
+                {{ form.username.help_text }}
+            </div>
+            <div class="form-group">
+                <div class="errornote alert-danger">
+                    {{ form.password1.errors }}
+                </div>
+                <div class="input-group">
+                    <div class="input-group-addon"><i class="fa fa-key fa-fw"></i></div>
+                    <input type="password" name="password1" class="form-control">
+                </div>
+                {{ form.password1.help_text }}
+            </div>
+            <div class="form-group">
+                <div class="errornote alert-danger">
+                    {{ form.password2.errors }}
+                </div>
+                <div class="input-group">
+                    <div class="input-group-addon"><i class="fa fa-key fa-fw"></i></div>
+                    <input type="password" name="password2" class="form-control">
+                </div>
+                {{ form.password2.help_text }}
+            </div>
+            <div class="form-group">
+                <div class="errornote alert-danger">
+                    {{ form.invitecode.errors }}
+                </div>
+                <div class="input-group">
+                    <div class="input-group-addon"><i class="fa fa-gift fa-fw"></i></div>
+                    <input type="text" name="invitecode" class="form-control">
+                </div>
+                {{ form.invitecode.help_text }}
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create Account" class="templatemo-blue-button width-100">
+            </div>
+
+        </form>
+    </div>
+    <div class="templatemo-content-widget templatemo-login-widget templatemo-register-widget white-bg">
+        <p>Already a member? Head (who said head?) to the <strong><a href="/" class="blue-text">Login
+                    Page</a>.</strong>
+        </p>
+    </div>
+</body>
+{% endblock %}

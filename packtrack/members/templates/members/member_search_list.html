@@ -1,0 +1,39 @@
+{% extends 'members/members_base.html' %}
+{% block sidebar %}
+{% include 'sidebar.html' with active_link='members' %}
+{% endblock sidebar %}
+{% block content %}
+
+<div class="col-1">
+    <div class="panel panel-default templatemo-content-widget white-bg no-padding templatemo-overflow-hidden">
+        <div class="panel-body blue-bg templatemo-position-relative">
+            <h2 class="text-uppercase">Hashers</h2>
+        </div>
+        <input class='form-control' type="text" id="tableInput" onkeyup="tableFunction()"
+            placeholder="Search by hash name or kennel membership..">
+        <div class="table-responsive">
+            <table id='filterTable' class="table table-striped table-bordered">
+                <thead>
+                    <tr class="header">
+                        <th class='col-sm-1'>Hash Name</th>
+                        <th class='col-lg-1'>Kennels</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for member in members %}
+                    <tr>
+                        <td><a href="/members/{{member.member_user_account.username}}">{{ member.member_hash_name }}</a>
+                        </td>
+                        <td>{% if member.member_kennels %}
+                            {% for kennel in member.member_kennels.all %}{{ kennel.name }}<br>{% endfor %}
+                            {% endif %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
