@@ -31,62 +31,7 @@
   {% block body %}{% endblock body %}
 
   {% block javascript %}
-  <script>
-    function tableFunction() {
-      // Declare variables
-      var input, filter, table, tr, td, i, txtValue;
-      input = document.getElementById("tableInput");
-      filter = input.value.toUpperCase();
-      table = document.getElementById("filterTable");
-      trs = table.getElementsByTagName("tr");
-      // Loop through all table rows, and hide those who don't match the search query
-      for (let tr of trs) {
-        tds = tr.getElementsByTagName("td");
-        for (let td of tds) {
-          tr.style.display = "none";
-          txtValue = td.textContent || td.innerText;
-          if (txtValue.toUpperCase().indexOf(filter) > -1) {
-            tr.style.display = "";
-            break
-          }
-        }
-      }
-    }
 
-    /*
-        On submiting the form, send the POST ajax
-        request to server and after successfull submission
-        display the object.
-    */
-    function create_invite() {
-      // make POST ajax call
-      $.ajax({
-        type: 'POST',
-        url: "{% url 'post_invite' %}",
-        data: {
-          csrfmiddlewaretoken: '{{ csrf_token }}'
-        },
-        success: function (response) {
-          // on successfull creating object
-          // display the newly friend to table.
-          var instance = JSON.parse(response["instance"])[0];
-          var fields = instance["fields"]
-          $("#filterTable tbody").prepend(
-            `<tr> 
-              <td>${fields["invite_code"]||""}</td>
-              <td>${fields["invite_expiration"]||""}</td>
-              <td></td>
-            </tr>`
-          )
-        },
-        error: function (response) {
-          // alert the error if any error occured
-          alert(response["responseJSON"]["error"]);
-        }
-      })
-    }
-
-  </script>
   {% endblock javascript %}
 
 </html>

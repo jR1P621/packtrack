@@ -7,6 +7,9 @@ import datetime
 
 
 class UserCreationInviteForm(auth_forms.UserCreationForm):
+    '''
+    Extends default user creation form to include invite code
+    '''
     error_messages = {
         'invalid_invite': _('Invalid Invite Code'),
     }
@@ -19,12 +22,14 @@ class UserCreationInviteForm(auth_forms.UserCreationForm):
         _("Enter a valid invite code. If you don't have one, ask a current member to send you one."
           ),
     )
+    invitecode.widget.attrs['class'] = 'form-control'
 
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs['class'] = 'form-control'
 
     def clean_invitecode(self):
-        print('check invite')
         invitecode = self.cleaned_data.get("invitecode")
         try:
             invite = InviteCode.objects.get(invite_code=invitecode)
@@ -43,7 +48,6 @@ class UserCreationInviteForm(auth_forms.UserCreationForm):
         return invitecode
 
     def save(self, commit=True):
-        print('create user')
         user = super().save(commit=False)
         try:
             used_invite: InviteCode = InviteCode.objects.get(

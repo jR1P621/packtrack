@@ -10,20 +10,15 @@ class Member(models.Model):
     member_avatar = models.ImageField(null=True)
     member_hash_name = models.CharField(max_length=64)
     member_email = models.EmailField(null=True)
-    member_kennels = models.ManyToManyField('kennels.Kennel',
-                                            through='kennels.KennelMembership')
+
+    def __str__(self):
+        return self.member_user_account.username
 
 
 class MemberURLs(models.Model):
     url = models.URLField()
     url_member = models.ForeignKey(Member, on_delete=models.CASCADE)
     url_desc = models.CharField(max_length=32)
-
-
-class MembershipRequest(models.Model):
-    request_member = models.ForeignKey(Member, on_delete=models.CASCADE)
-    request_kennel = models.ForeignKey('kennels.Kennel',
-                                       on_delete=models.CASCADE)
 
 
 class InviteCode(models.Model):
@@ -39,6 +34,14 @@ class InviteCode(models.Model):
                                         on_delete=models.CASCADE,
                                         null=True,
                                         related_name='invite_receiver')
+
+    # def __str__(self):
+    #     return ','.join([
+    #         self.invite_code,
+    #         str(self.invite_expiration),
+    #         str(self.invite_creator),
+    #         str(self.invite_receiver)
+    #     ])
 
 
 # create associated member object when user account is created

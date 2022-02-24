@@ -30,12 +30,12 @@
                 <tbody>
                     {% for kennel in kennels %}
                     <tr>
-                        <td><a href="kennels/{{kennel.kennel_name}}">{{ kennel.kennel_name }}</a></td>
-                        <td>{{ kennel.kennel_abbr }}</td>
-                        <td>{{ kennel.kennel_city.name }}</td>
-                        <td>{{ kennel.kennel_city.region.name }}</td>
-                        <td>{{ kennel.kennel_city.country.name }}</td>
-                        <td>{{ kennel.kennel_city.display_name }}</td>
+                        <td class='col-lg-1'><a href="profile/{{kennel.kennel_name}}">{{ kennel.kennel_name }}</a></td>
+                        <td class='col-sm-1'>{{ kennel.kennel_abbr }}</td>
+                        <td class='col-lg-1 hidden-xs'>{{ kennel.kennel_city.name }}</td>
+                        <td class='col-lg-1 hidden-xs'>{{ kennel.kennel_city.region.name }}</td>
+                        <td class='col-lg-1 hidden-xs'>{{ kennel.kennel_city.country.name }}</td>
+                        <td class='col-lg-1 visible-xs'>{{ kennel.kennel_city.display_name }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -43,7 +43,7 @@
         </div>
     </div>
 </div>
-
+{% include 'helpers/search_table_js.html' %}
 
 
 {% endblock content %}

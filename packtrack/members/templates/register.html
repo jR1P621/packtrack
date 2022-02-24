@@ -16,6 +16,7 @@
         {% endfor %}
         {% endif %}
 
+
         <form method="post" class="templatemo-login-form">
             {% csrf_token %}
             <div class="form-group">
@@ -24,7 +25,7 @@
                 </div>
                 <div class="input-group">
                     <div class="input-group-addon"><i class="fa fa-user fa-fw"></i></div>
-                    <input type="text" name="username" class="form-control" placeholder="hashname">
+                    {{form.username}}
                 </div>
                 {{ form.username.help_text }}
             </div>
@@ -34,7 +35,7 @@
                 </div>
                 <div class="input-group">
                     <div class="input-group-addon"><i class="fa fa-key fa-fw"></i></div>
-                    <input type="password" name="password1" class="form-control">
+                    {{form.password1}}
                 </div>
                 {{ form.password1.help_text }}
             </div>
@@ -44,7 +45,7 @@
                 </div>
                 <div class="input-group">
                     <div class="input-group-addon"><i class="fa fa-key fa-fw"></i></div>
-                    <input type="password" name="password2" class="form-control">
+                    {{form.password2}}
                 </div>
                 {{ form.password2.help_text }}
             </div>
@@ -54,7 +55,7 @@
                 </div>
                 <div class="input-group">
                     <div class="input-group-addon"><i class="fa fa-gift fa-fw"></i></div>
-                    <input type="text" name="invitecode" class="form-control">
+                    {{form.invitecode}}
                 </div>
                 {{ form.invitecode.help_text }}
             </div>

@@ -6,8 +6,6 @@ from django.db.models.signals import pre_delete
 class Event(models.Model):
     event_name = models.CharField(max_length=128)
     event_date = models.DateField()
-    event_start_time = models.TimeField(null=True)
-    event_end_time = models.TimeField(null=True)
     event_desc = models.TextField(blank=True)
     # event_hosts = models.ManyToManyField('kennels.Kennel', through='EventHost')
     # event_attendance = models.ManyToManyField('members.Member',

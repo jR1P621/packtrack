@@ -17,7 +17,6 @@ def view_register(request):
     if request.method == 'POST':
         f = UserCreationInviteForm(request.POST)
         if f.is_valid():
-            print(Member.objects.all())
             user = f.save()
             messages.success(request, 'Account created successfully')
             login(request, user)

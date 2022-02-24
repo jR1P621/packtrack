@@ -1,0 +1,67 @@
+{% extends 'kennels/kennels_base.html' %}
+{% block sidebar %}
+{% include 'sidebar.html' with active_link='kennels' %}
+{% endblock sidebar %}
+{% block content %}
+
+<div class="templatemo-content-widget templatemo-login-widget white-bg">
+    <header class="text-center">
+        <h1>Create New Kennel</h1>
+    </header>
+    <form method="post" id="kennelForm" data-regions-url="{% url 'get_regions' %}"
+        data-cities-url=" {% url 'get_cities' %}">
+        {% csrf_token %}
+        {% include 'helpers/form_field.html' with field=form.kennel_name %}
+        {% include 'helpers/form_field.html' with field=form.kennel_abbr %}
+        {% include 'helpers/form_field.html' with field=form.country %}
+        {% include 'helpers/form_field.html' with field=form.region %}
+        {% include 'helpers/form_field.html' with field=form.city %}
+
+        <div class="form-group">
+            <input type="submit" value="Create Kennel" class="templatemo-blue-button width-100">
+        </div>
+    </form>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+    $("#id_country").change(function () {
+        var url = $("#kennelForm").attr("data-regions-url"); // get the url of the `load_regions` view
+        var countryId = $(this).val(); // get the selected country ID from the HTML input
+        $.ajax({ // initialize an AJAX request
+            type: 'GET',
+            url: url, // set the url of the request
+            data: {
+                'country': countryId // add the country id to the GET parameters
+            },
+            success: function (data) { // `data` is the return of the `load_regions` view function
+                $("#id_region").html(
+                    data
+                ); // replace the contents of the region input with the data that came from the server
+                $("#id_city").html('<option value="">---------</option>')
+                console.log("location cleared")
+            }
+        });
+
+    });
+    $("#id_region").change(function () {
+        var url = $("#kennelForm").attr("data-cities-url"); // get the url of the `load_cities` view
+        var regionId = $(this).val(); // get the selected region ID from the HTML input
+        $.ajax({ // initialize an AJAX request
+            type: 'GET',
+            url: url, // set the url of the request
+            data: {
+                'region': regionId // add the region id to the GET parameters
+            },
+            success: function (data) { // `data` is the return of the `load_cities` view function
+                $("#id_city").html(
+                    data
+                ); // replace the contents of the city input with the data that came from the server
+            }
+        });
+    });
+
+</script>
+
+{% endblock %}

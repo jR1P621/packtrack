@@ -1,0 +1,23 @@
+  <script>
+      function tableFunction() {
+          // Declare variables
+          var input, filter, table, tr, td, i, txtValue;
+          input = document.getElementById("tableInput");
+          filter = input.value.toUpperCase();
+          table = document.getElementById("filterTable");
+          trs = table.getElementsByTagName("tr");
+          // Loop through all table rows, and hide those who don't match the search query
+          for (let tr of trs) {
+              tds = tr.getElementsByTagName("td");
+              for (let td of tds) {
+                  tr.style.display = "none";
+                  txtValue = td.textContent || td.innerText;
+                  if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                      tr.style.display = "";
+                      break
+                  }
+              }
+          }
+      }
+
+  </script>

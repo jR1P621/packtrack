@@ -23,9 +23,10 @@
                 <tbody>
                     {% for member in members %}
                     <tr>
-                        <td><a href="/members/{{member.member_user_account.username}}">{{ member.member_hash_name }}</a>
+                        <td class='col-sm-1'><a
+                                href="/members/{{member.member_user_account.username}}">{{ member.member_hash_name }}</a>
                         </td>
-                        <td>{% if member.member_kennels %}
+                        <td class='col-lg-1'>{% if member.member_kennels %}
                             {% for kennel in member.member_kennels.all %}{{ kennel.name }}<br>{% endfor %}
                             {% endif %}</td>
                     </tr>
@@ -35,5 +36,7 @@
         </div>
     </div>
 </div>
+
+{% include 'helpers/search_table_js.html' %}
 
 {% endblock content %}

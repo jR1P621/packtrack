@@ -1,0 +1,15 @@
+<div class="form-group">
+    <div class="errornote alert-danger">
+        {{ field.errors }}
+    </div>
+    <div class="input-group">
+        <div class="input-group-addon">
+            {% if icon %} <i class="fa {{icon}} fa-fw"></i>
+            {% else %}
+            <label>{{field.label}}</label>
+            {% endif %}
+        </div>
+        {{field}}
+    </div>
+    {{ field.help_text }}
+</div>

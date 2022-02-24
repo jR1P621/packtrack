@@ -1,41 +1,55 @@
 from django.db import models
 from cities_light.models import City
 
+from members.models import Member
+
 
 class Kennel(models.Model):
     kennel_name = models.CharField(max_length=128, unique=True)
     kennel_abbr = models.CharField(max_length=16, default='')
     kennel_city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True)
-    kennel_is_active = models.BooleanField()
+    kennel_is_active = models.BooleanField(default=True)
     kennel_img_path = models.ImageField(null=True)
-    kennel_about = models.TextField(blank=True)
+    kennel_about = models.TextField(blank=True, null=True)
+    kennel_members = models.ManyToManyField('members.Member',
+                                            through='KennelMembership',
+                                            related_name='member_kennels')
+    kennel_events = models.ManyToManyField('events.Event',
+                                           through='events.EventHost')
+    kennel_longevity_includes = models.ManyToManyField('Kennel')
 
-    # kennel_members = models.ManyToManyField('members.Member',
-    #                                         through='KennelMembership')
-    # kennel_events = models.ManyToManyField('events.Event',
-    #                                        through='events.EventHost')
-    # kennel_membership_requests = models.ManyToManyField(
-    #     'members.Member', through='members.MembershipRequest')
     def save(self, *args, **kwargs):
         if self.kennel_abbr == '':
             self.kennel_abbr = 'H3'
         super().save(*args, **kwargs)
 
+    def set_city(self, city):
+        self.kennel_city = city
+
+    def add_member(self, member: Member, approved=False, admin=False):
+        new_membership = KennelMembership(membership_member=member,
+                                          membership_kennel=self,
+                                          membership_is_approved=approved,
+                                          membership_is_admin=admin)
+        new_membership.save()
+
+    def __str__(self) -> str:
+        return self.kennel_name
+
 
 class KennelMembership(models.Model):
-    member_user = models.ForeignKey('members.Member', on_delete=models.CASCADE)
-    member_kennel = models.ForeignKey(Kennel, on_delete=models.CASCADE)
+    membership_member = models.ForeignKey('members.Member',
+                                          on_delete=models.CASCADE)
+    membership_kennel = models.ForeignKey(Kennel, on_delete=models.CASCADE)
+    membership_is_approved = models.BooleanField(default=False)
+    membership_is_admin = models.BooleanField(default=False)
 
-
-class KennelLongevityLink(models.Model):
-    longevity_master_kennel = models.ForeignKey(
-        Kennel,
-        on_delete=models.CASCADE,
-        related_name='longevity_master_kennel')
-    longevity_linked_kennel = models.ForeignKey(
-        Kennel,
-        on_delete=models.CASCADE,
-        related_name='longevity_linked_kennel')
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['membership_member', 'membership_kennel'],
+                name='unique_membership_request')
+        ]
 
 
 class KennelURLs(models.Model):
