@@ -3,11 +3,13 @@
 {% block body %}
 
 <body class="light-gray-bg">
+	<div class='templatemo-content-widget templatemo-login-widget templatemo-register-widget white-bg'>
+		<div class="text-center no-padding">
+			<img src='/static/images/truetrail.png' style="width: 50px;filter: invert(100%);"></img>
+			<h1 class='templatemo-site-header'>PackTRAK</h1>
+		</div>
+	</div>
 	<div class="templatemo-content-widget templatemo-login-widget white-bg">
-		<header class="text-center">
-			<div class="square"></div>
-			<h1>PackTRAK</h1>
-		</header>
 		{% if form.errors and not form.non_field_errors %}
 		<p class="errornote">
 			{% if form.errors.items|length == 1 %}Please correct the error below."{% else %}"Please correct the errors

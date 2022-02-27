@@ -15,7 +15,7 @@
             <table id='filterTable' class="table table-striped table-bordered">
                 <thead>
                     <tr class="header">
-                        <th class='col-sm-1'>Hash Name</th>
+                        <th class='col-lg-1'>Hash Name</th>
                         <th class='col-lg-1'>Kennels</th>
                     </tr>
                 </thead>
@@ -23,12 +23,12 @@
                 <tbody>
                     {% for member in members %}
                     <tr>
-                        <td class='col-sm-1'><a
+                        <td class='col-lg-1'><a
                                 href="/members/{{member.member_user_account.username}}">{{ member.member_hash_name }}</a>
                         </td>
-                        <td class='col-lg-1'>{% if member.member_kennels %}
-                            {% for kennel in member.member_kennels.all %}{{ kennel.name }}<br>{% endfor %}
-                            {% endif %}</td>
+                        <td class='col-lg-1'>
+                            {% include 'members/profile/member_kennels.html' %}
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>

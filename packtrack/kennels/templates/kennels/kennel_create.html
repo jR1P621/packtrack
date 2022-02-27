@@ -8,59 +8,103 @@
     <header class="text-center">
         <h1>Create New Kennel</h1>
     </header>
-    <form method="post" id="kennelForm" data-regions-url="{% url 'get_regions' %}"
-        data-cities-url=" {% url 'get_cities' %}">
+    <form method="post" id="kennelForm">
         {% csrf_token %}
         {% include 'helpers/form_field.html' with field=form.kennel_name %}
         {% include 'helpers/form_field.html' with field=form.kennel_abbr %}
-        {% include 'helpers/form_field.html' with field=form.country %}
-        {% include 'helpers/form_field.html' with field=form.region %}
-        {% include 'helpers/form_field.html' with field=form.city %}
-
         <div class="form-group">
-            <input type="submit" value="Create Kennel" class="templatemo-blue-button width-100">
+            <div class="errornote alert-danger">
+                {{ form.kennel_city.errors }}
+            </div>
+            <div class="input-group">
+                <div class="input-group-addon">
+                    <label style="margin:0">{{form.city.label}}</label>
+                </div>
+                <div id="myDropdown" class="dropdown-content form-control">
+                    <input class='templatemo-search-form' type="text" id="city_search" placeholder="Search.."
+                        onkeyup="filterFunction()" autocomplete="off">
+                    <div id='dropdown-options'>
+                    </div>
+                </div>
+                {{form.kennel_city.as_hidden}}
+                {{form.city}}
+            </div>
+            {{ form.kennel_city.help_text }}
+        </div>
+        <div class="form-group">
+            <input name="formSubmit" type="submit" value="Create Kennel" class="templatemo-blue-button width-100">
         </div>
     </form>
 </div>
 
-
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script>
-    $("#id_country").change(function () {
-        var url = $("#kennelForm").attr("data-regions-url"); // get the url of the `load_regions` view
-        var countryId = $(this).val(); // get the selected country ID from the HTML input
-        $.ajax({ // initialize an AJAX request
-            type: 'GET',
-            url: url, // set the url of the request
-            data: {
-                'country': countryId // add the country id to the GET parameters
-            },
-            success: function (data) { // `data` is the return of the `load_regions` view function
-                $("#id_region").html(
-                    data
-                ); // replace the contents of the region input with the data that came from the server
-                $("#id_city").html('<option value="">---------</option>')
-                console.log("location cleared")
-            }
-        });
+    window.onload = function () {
+        var hiddenCity = document.getElementById("id_kennel_city");
+        document.getElementById("id_city").value = hiddenCity.value;
+    }
 
-    });
-    $("#id_region").change(function () {
-        var url = $("#kennelForm").attr("data-cities-url"); // get the url of the `load_cities` view
-        var regionId = $(this).val(); // get the selected region ID from the HTML input
-        $.ajax({ // initialize an AJAX request
-            type: 'GET',
-            url: url, // set the url of the request
-            data: {
-                'region': regionId // add the region id to the GET parameters
-            },
-            success: function (data) { // `data` is the return of the `load_cities` view function
-                $("#id_city").html(
-                    data
-                ); // replace the contents of the city input with the data that came from the server
-            }
+    $('#id_city').click(function toggleDropdown() {
+        document.getElementById("myDropdown").classList.toggle("show");
+        document.getElementById("city_search").focus();
+    })
+
+    function filterFunction() {
+        var input, filter, ul, li, a, i;
+        input = document.getElementById("city_search");
+        currentInput = input.value.toUpperCase()
+        filter = currentInput.split(/[\s,;]+/).filter((s, i, a) => {
+            return s !== ''
         });
-    });
+        filter.forEach(string => console.log(string))
+        if (filter.length === 0) {
+            $("#dropdown-options").html('')
+            return
+        }
+        url =
+            'https://data.opendatasoft.com/api/v2/catalog/datasets/geonames-all-cities-with-a-population-500@public/records?select=name,country,admin1_code&where='
+        filter.forEach((string, i) => {
+            let ret = '(name like "*' +
+                string + '*" OR country like "*' + string + '*" OR admin1_code like "*' + string + '*")';
+            if (i < filter.length - 1) {
+                ret = ret + " AND "
+            }
+            url = url + ret
+        })
+        url = url + '&limit = 10'
+
+        $.ajax({
+            type: 'GET',
+            url: url,
+            data: {},
+            success: function (response) {
+                // on successfull creating object
+                // display the newly friend to table.
+                console.log(response)
+                if (input.value.toUpperCase() === currentInput) {
+                    var newList = ''
+                    response['records'].forEach((record) => {
+                        let fullName =
+                            `${record['record']['fields']['name']}, ${record['record']['fields']['admin1_code'].match(/[0-9]/g) ?'' : record['record']['fields']['admin1_code'] + ', '}${record['record']['fields']['country']}`
+                        newList +=
+                            `<a href="#" id="${record['record']['id']}" onClick="setCity('${fullName}')">${fullName}</a>`
+                    })
+                    $("#dropdown-options").html(newList)
+                }
+            },
+            error: function (response) {
+                // alert the error if any error occured
+                //alert(response["responseJSON"]["error"]);
+                $("#dropdown-options").html('')
+            }
+        })
+    }
+
+    function setCity(e) {
+        document.getElementById("id_city").value = e
+        document.getElementById("id_kennel_city").value = e
+        document.getElementById("myDropdown").classList.toggle("show")
+    }
 
 </script>
 

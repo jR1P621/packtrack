@@ -5,8 +5,8 @@
     <h1>PackTRAK</h1>
   </header>
   {% if user.member.member_avatar %}
-  <div class="profile-photo-container">
-    <img src={{user.member.member_avatar}} alt="Profile Photo" class="img-responsive">
+  <div class="profile-photo-container hidden-xs">
+    <img src="{{user.member.member_avatar.url}}" alt="Profile Photo" class="img-responsive">
     <div class="profile-photo-overlay"></div>
   </div>
   {% endif %}

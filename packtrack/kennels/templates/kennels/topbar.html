@@ -12,21 +12,21 @@
                             Browse Kennels</a>
                 </li>
 
-                {% for member_kennel in member.member_kennels.all %}
+                {% for member_kennel in user.member.member_kennels.all %}
                 <li>
-                    {% if kennel.id != member_kennel.id %}
+                    {% if kennel == member_kennel %}
                     <a href="#" class="active">
-                        {% else %} <a href="kennels/profile/{member_kennel.name}">
+                        {% else %} <a href="/kennels/profile/{{member_kennel.kennel_name}}">
                             {% endif %}
-                            {{ kennel.abbr }}</a>
+                            {{ member_kennel.kennel_abbr }}</a>
                 </li>
 
 
                 {% endfor %}
                 <li>
-                    {% if request.get_full_path == '/create_kennel' %}
+                    {% if request.get_full_path == '/kennels/create_kennel' %}
                     <a href="#" class="active">
-                        {% else %} <a href="create_kennel">
+                        {% else %} <a href="/kennels/create_kennel">
                             {% endif %}
                             Create New Kennel</a>
                 </li>

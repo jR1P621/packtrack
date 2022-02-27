@@ -10,7 +10,6 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('members', '0001_initial'),
-        ('cities_light', '0011_alter_city_country_alter_city_id_alter_city_region_and_more'),
         ('kennels', '0001_initial'),
     ]
 
@@ -18,21 +17,32 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='kennelmembership',
             name='member_user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='members.member'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to='members.member'),
         ),
         migrations.AddField(
             model_name='kennellongevitylink',
             name='longevity_linked_kennel',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='longevity_linked_kennel', to='kennels.kennel'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name='longevity_linked_kennel',
+                to='kennels.kennel'),
         ),
         migrations.AddField(
             model_name='kennellongevitylink',
             name='longevity_master_kennel',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='longevity_master_kennel', to='kennels.kennel'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name='longevity_master_kennel',
+                to='kennels.kennel'),
         ),
         migrations.AddField(
             model_name='kennel',
             name='kennel_city',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='cities_light.city'),
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to='cities_light.city'),
         ),
     ]

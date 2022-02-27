@@ -85,6 +85,10 @@ nav li {
 	color: white;
 }
 
+.dark-bg {
+	background: #1f2124;
+}
+
 .green-bg {
 	background-color: #39ADB4;
 }
@@ -203,9 +207,13 @@ footer {
 }
 
 .square {
+	background-image: url('/static/images/truetrail.png');
+	background-repeat: no-repeat;
 	width: 25px;
 	height: 25px;
-	border: 3px solid #13895F;
+	background-size: 25px;
+	background-position: center;
+	/* border: 3px solid #13895F; */
 	display: inline-block;
 	vertical-align: middle;
 }
@@ -233,12 +241,14 @@ footer {
 
 .profile-photo-container {
 	position: relative;
-	/* width: 100%; */
+	/* max-height: 200px; */
+	width: 100%;
+	/* aspect-ratio: 1; */
 	/* max-width: 50%; */
 }
 
 .profile-photo-overlay {
-	background-color: rgba(4, 152, 114, 0.35);
+	background-color: rgba(4, 152, 114, 0);
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -248,13 +258,13 @@ footer {
 }
 
 .profile-photo-overlay:hover {
-	background-color: rgba(4, 152, 114, 0);
+	background-color: rgba(4, 152, 114, 0.1);
 }
 
 /* Search form */
 .templatemo-search-form {
 	font-size: 1.1em;
-	margin: 50px 20px;
+	margin: 15px;
 }
 
 .templatemo-search-form .input-group {
@@ -305,6 +315,39 @@ footer {
 .templatemo-search-form .input-group {
 	position: relative;
 }
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none !important;
+  position: absolute !important;
+  background-color: #fff;
+  /* min-width: 230px; */
+  /* border: 1px solid #ddd; */
+  height: auto;
+  width: auto !important;
+  z-index: 1;
+  top:33px;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #d2e6e7}
+
+/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+.show {display:block !important;}
 
 /* .fa-search {
 	height: 32px;
@@ -378,16 +421,16 @@ footer {
 /* Main Content Area */
 .templatemo-content {
 	margin-top: 0px;
-	min-height: 100vh;
+	height: 100vh;
 	padding: 0;
-	overflow-x: hidden;
+	overflow: hidden;
 }
 
 .templatemo-content-container {
 	padding: 40px 50px;
-	overflow-y: scroll;
+	overflow-y: auto;
 	overflow-x: hidden;
-	height: 100vh;
+	max-height:90vh;
 }
 
 .templatemo-flex-row {
@@ -564,6 +607,7 @@ footer {
 .templatemo-login-widget .square {
 	width: 18px;
 	height: 18px;
+	background-size: 18px;
 }
 
 .templatemo-login-widget header {
@@ -630,7 +674,7 @@ footer {
 }
 
 .templatemo-register-widget {
-	max-width: 450px;
+	max-width: 500px;
 	padding: 15px;
 	text-align: center;
 }
@@ -873,9 +917,9 @@ input[type="radio"]:checked+label span {
 		width: 250px;
 	}
 
-	.templatemo-search-form {
-		margin: 20px;
-	}
+	/* .templatemo-search-form {
+		margin: 15px;
+	} */
 
 	nav li {
 		font-size: 1em;
@@ -914,6 +958,7 @@ input[type="radio"]:checked+label span {
 	.square {
 		width: 20px;
 		height: 20px;
+		background-size: 20px;
 	}
 
 	.templatemo-left-nav a.active,

@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.contrib import messages
-from .forms import UserCreationInviteForm
+from .forms import UserCreationInviteForm, EditProfileForm
 from django.contrib.auth.models import User
 from .models import InviteCode, Member
 from django.http import JsonResponse
@@ -26,6 +26,26 @@ def view_register(request):
         f = UserCreationInviteForm()
 
     return render(request, 'register.html', {'form': f})
+
+
+@login_required
+def edit_profile(request):
+    if request.method == 'POST':
+        f = EditProfileForm(request.POST,
+                            request.FILES,
+                            instance=request.user.member)
+        if f.is_valid():
+            f.save()
+            m = request.user.member
+            m.member_avatar = f.cleaned_data['member_avatar']
+            m.save()
+            print('saved')
+            return HttpResponseRedirect(f'/members/{request.user.username}')
+
+    else:
+        f = EditProfileForm(None, instance=request.user.member)
+
+    return render(request, 'members/profile/profile_edit.html', {'form': f})
 
 
 @login_required

@@ -21,10 +21,7 @@
                     <tr class="header">
                         <th class='col-lg-1'>Name</th>
                         <th class='col-sm-1'></th>
-                        <th class='col-lg-1 hidden-xs'>City</th>
-                        <th class='col-lg-1 hidden-xs'>State/Region</th>
-                        <th class='col-lg-1 hidden-xs'>Country</th>
-                        <th class='col-lg-1 visible-xs'>Location</th>
+                        <th class='col-lg-1'>Location</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -32,10 +29,7 @@
                     <tr>
                         <td class='col-lg-1'><a href="profile/{{kennel.kennel_name}}">{{ kennel.kennel_name }}</a></td>
                         <td class='col-sm-1'>{{ kennel.kennel_abbr }}</td>
-                        <td class='col-lg-1 hidden-xs'>{{ kennel.kennel_city.name }}</td>
-                        <td class='col-lg-1 hidden-xs'>{{ kennel.kennel_city.region.name }}</td>
-                        <td class='col-lg-1 hidden-xs'>{{ kennel.kennel_city.country.name }}</td>
-                        <td class='col-lg-1 visible-xs'>{{ kennel.kennel_city.display_name }}</td>
+                        <td class='col-lg-1'>{{ kennel.kennel_city }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

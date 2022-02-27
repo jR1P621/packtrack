@@ -19,46 +19,10 @@
 
         <form method="post" class="templatemo-login-form">
             {% csrf_token %}
-            <div class="form-group">
-                <div class="errornote alert-danger">
-                    {{ form.username.errors }}
-                </div>
-                <div class="input-group">
-                    <div class="input-group-addon"><i class="fa fa-user fa-fw"></i></div>
-                    {{form.username}}
-                </div>
-                {{ form.username.help_text }}
-            </div>
-            <div class="form-group">
-                <div class="errornote alert-danger">
-                    {{ form.password1.errors }}
-                </div>
-                <div class="input-group">
-                    <div class="input-group-addon"><i class="fa fa-key fa-fw"></i></div>
-                    {{form.password1}}
-                </div>
-                {{ form.password1.help_text }}
-            </div>
-            <div class="form-group">
-                <div class="errornote alert-danger">
-                    {{ form.password2.errors }}
-                </div>
-                <div class="input-group">
-                    <div class="input-group-addon"><i class="fa fa-key fa-fw"></i></div>
-                    {{form.password2}}
-                </div>
-                {{ form.password2.help_text }}
-            </div>
-            <div class="form-group">
-                <div class="errornote alert-danger">
-                    {{ form.invitecode.errors }}
-                </div>
-                <div class="input-group">
-                    <div class="input-group-addon"><i class="fa fa-gift fa-fw"></i></div>
-                    {{form.invitecode}}
-                </div>
-                {{ form.invitecode.help_text }}
-            </div>
+            {% include 'helpers/form_field.html' with field=form.username icon='fa-user' %}
+            {% include 'helpers/form_field.html' with field=form.password1 icon='fa-key' %}
+            {% include 'helpers/form_field.html' with field=form.password2 icon='fa-key' %}
+            {% include 'helpers/form_field.html' with field=form.invitecode icon='fa-gift' %}
             <div class="form-group">
                 <input type="submit" value="Create Account" class="templatemo-blue-button width-100">
             </div>

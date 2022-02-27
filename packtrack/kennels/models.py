@@ -1,5 +1,4 @@
 from django.db import models
-from cities_light.models import City
 
 from members.models import Member
 
@@ -7,13 +6,14 @@ from members.models import Member
 class Kennel(models.Model):
     kennel_name = models.CharField(max_length=128, unique=True)
     kennel_abbr = models.CharField(max_length=16, default='')
-    kennel_city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True)
+    kennel_city = models.CharField(max_length=128, null=True)
     kennel_is_active = models.BooleanField(default=True)
     kennel_img_path = models.ImageField(null=True)
     kennel_about = models.TextField(blank=True, null=True)
-    kennel_members = models.ManyToManyField('members.Member',
-                                            through='KennelMembership',
-                                            related_name='member_kennels')
+    kennel_members = models.ManyToManyField(
+        'members.Member',
+        through='KennelMembership',
+    )
     kennel_events = models.ManyToManyField('events.Event',
                                            through='events.EventHost')
     kennel_longevity_includes = models.ManyToManyField('Kennel')

@@ -1,3 +1,4 @@
+from hashlib import md5
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save, pre_delete
@@ -5,11 +6,18 @@ from django.dispatch import receiver
 import datetime
 
 
+def avatar_upload(instance, filename):
+    return f'member_avatars/{md5(filename.encode()).hexdigest()}'
+
+
 class Member(models.Model):
     member_user_account = models.OneToOneField(User, on_delete=models.CASCADE)
-    member_avatar = models.ImageField(null=True)
+    member_avatar = models.ImageField(null=True, upload_to=avatar_upload)
     member_hash_name = models.CharField(max_length=64)
     member_email = models.EmailField(null=True)
+    member_kennels = models.ManyToManyField('kennels.Kennel',
+                                            blank=True,
+                                            through='kennels.KennelMembership')
 
     def __str__(self):
         return self.member_user_account.username

@@ -9,6 +9,4 @@ urlpatterns = [
     path('profile/<str:kennel_name>', views.view_kennel,
          name='kennel_profile'),
     path('create_kennel', views.view_create_kennel, name='create_kennel'),
-    path('post/ajax/regions', views.getRegions, name="get_regions"),
-    path('post/ajax/cities', views.getCities, name="get_cities"),
 ]

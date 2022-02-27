@@ -63,3 +63,28 @@ class UserCreationInviteForm(auth_forms.UserCreationForm):
             used_invite.invite_expiration = None
             used_invite.save()
         return user
+
+
+class EditProfileForm(forms.ModelForm):
+
+    class Meta:
+        model = Member
+        fields = ("member_hash_name", 'member_email', 'member_avatar')
+        field_classes = {
+            'member_hash_name': forms.CharField,
+            'member_email': forms.EmailField,
+            'member_avatar': forms.ImageField,
+        }
+        labels = {
+            'member_avatar': 'Profile Picture',
+            'member_hash_name': 'Hash Name',
+            'member_email': 'Email',
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['member_avatar'].widget = forms.FileInput()
+        for field in self.fields:
+            self.fields[field].widget.attrs['class'] = 'form-control'
+        # self.fields['member_avatar'].required = False
+        self.fields['member_email'].required = False
