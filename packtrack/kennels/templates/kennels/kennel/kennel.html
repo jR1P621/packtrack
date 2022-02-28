@@ -1,10 +1,51 @@
 {% extends 'kennels/kennels_base.html' %}
 {% block sidebar %}
-{% if kennel in user.member.member_kennels %}
+{% if my_membership.membership_is_approved %}
 {% include 'sidebar.html' with active_link='mykennels' %}
 {% else %}
 {% include 'sidebar.html' with active_link='kennels' %}
 {% endif %}
 {% endblock sidebar %}
 {% block content %}
+
+<div class="templatemo-content-container">
+    <div class="templatemo-flex-row flex-content-row">
+        <div class="templatemo-content-widget {% if my_membership.membership_is_approved %}green-bg white-text
+            {% else %}pink-bg{% endif %} text-center
+            col-1 col-lg-6">
+            <h1>
+                {{kennel.kennel_name}}
+            </h1>
+        </div>
+    </div>
+    <!-- Row 1 -->
+    <div class="templatemo-flex-row flex-content-row">
+        <div class="templatemo-content-widget white-bg col-2">
+            {% include 'kennels/kennel/membership_button.html' %}
+            {% if kennel.kennel_img %}
+            {% include 'kennels/kennel/profile_avatar.html' %}
+            {% endif %}
+            {% comment %} {% include 'kennels/kennel/profile_about.html' %} {% endcomment %}
+        </div>
+        {% include 'kennels/kennel/kennel_members.html' %}
+    </div>
+    <div class="templatemo-flex-row flex-content-row">
+        {% comment %} {% include 'kennels/kennel/profile_my_participation.html' %} {% endcomment %}
+        {% comment %} {% include 'kennels/kennel/profile_unclaimed_attendance.html' %} {% endcomment %}
+    </div>
+    {% if my_membership.membership_is_admin %}
+    <div class="templatemo-flex-row flex-content-row">
+        <div class="templatemo-content-widget dark-bg white-text text-center col-1 col-lg-6">
+            <h1>
+                Kennel Administration
+            </h1>
+        </div>
+    </div>
+    <div class="templatemo-flex-row flex-content-row">
+        {% include 'kennels/kennel/kennel_events.html' %}
+        {% include  'kennels/kennel/membership_requests.html'%}
+    </div>
+    {% endif %}
+</div>
+
 {% endblock %}

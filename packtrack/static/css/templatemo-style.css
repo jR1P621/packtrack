@@ -86,6 +86,7 @@ nav li {
 }
 
 .dark-bg {
+	color: white;
 	background: #1f2124;
 }
 
@@ -204,6 +205,8 @@ footer {
 -----------------------------*/
 .templatemo-sidebar {
 	width: 300px;
+	height: 100vh;
+	overflow-y: auto;
 }
 
 .square {
@@ -646,7 +649,8 @@ footer {
 }
 
 .templatemo-blue-button,
-.templatemo-white-button {
+.templatemo-white-button,
+.templatemo-pink-button {
 	border-radius: 2px;
 	padding: 10px 30px;
 	text-transform: uppercase;
@@ -661,6 +665,16 @@ footer {
 
 .templatemo-blue-button:hover {
 	background-color: #2A858B;
+}
+
+.templatemo-pink-button {
+	background-color: #D7425C;
+	border: none;
+	color: white;
+}
+
+.templatemo-pink-button:hover {
+	background-color: #BD1F3B;
 }
 
 .templatemo-white-button {
@@ -1002,6 +1016,10 @@ input[type="radio"]:checked+label span {
 
 	.templatemo-site-header {
 		margin: 20px 15px;
+	}
+
+	.templatemo-sidebar{
+		height: auto;
 	}
 
 	.profile-photo-container {

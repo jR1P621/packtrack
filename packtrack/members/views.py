@@ -72,8 +72,7 @@ def view_dashboard(request):
 @login_required
 def view_members(request):
     members = Member.objects.all()
-    return render(request, 'members/member_search_list.html',
-                  {'members': members})
+    return render(request, 'members/member_list.html', {'members': members})
 
 
 @login_required

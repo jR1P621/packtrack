@@ -1,0 +1,19 @@
+<thead>
+    <tr class="header">
+        <th class='col-lg-1'>Hash Name</th>
+        <th class='col-lg-1'>Kennels</th>
+    </tr>
+</thead>
+
+<tbody>
+    {% for member in members %}
+    <tr>
+        <td searchable class='col-lg-1'><a
+                href="/members/{{member.member_user_account.username}}">{{ member.member_hash_name }}</a>
+        </td>
+        <td searchable class='col-lg-1'>
+            {% include 'members/profile/member_kennels.html' %}
+        </td>
+    </tr>
+    {% endfor %}
+</tbody>

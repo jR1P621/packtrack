@@ -1,4 +1,4 @@
-from hashlib import md5
+from hashlib import md5, sha256
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save, pre_delete
@@ -7,7 +7,7 @@ import datetime
 
 
 def avatar_upload(instance, filename):
-    return f'member_avatars/{md5(filename.encode()).hexdigest()}'
+    return f'member_avatars/{sha256((filename+datetime.datetime.now().ctime()).encode()).hexdigest()}'
 
 
 class Member(models.Model):

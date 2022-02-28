@@ -1,0 +1,14 @@
+{% extends 'kennels/kennels_base.html' %}
+{% block sidebar %}
+{% if request.get_full_path == '/kennels/mykennels'%}
+{% include 'sidebar.html' with active_link='mykennels' %}
+{% else %}
+{% include 'sidebar.html' with active_link='kennels' %}
+{% endif %}
+{% endblock sidebar %}
+{% block content %}
+
+<div class="col-1">
+    {% include 'helpers/search_table.html' with table_template='kennels/kennel_search_table.html' %}
+</div>
+{% endblock content %}

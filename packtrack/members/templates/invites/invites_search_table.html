@@ -1,0 +1,35 @@
+<thead>
+    <tr class="header">
+        <th class='col-md-1'>Code</th>
+        <th class='col-md-1'>Expiration</th>
+        <th class='col-md-1'>Invitee</th>
+    </tr>
+</thead>
+<tbody>
+    {% for invite in invites %}
+    {% if not invite.invite_receiver%}
+    <tr>
+        <td searchable>{{ invite.invite_code }}</td>
+        <td searchable>{{ invite.invite_expiration }}</td>
+        <td>{% if invite.invite_receiver %}
+            <a href="/members/{{invite.invite_receiver.member_user_account.username}}">
+                {{ invite.invite_receiver.member_hash_name }}</a>
+            {% endif %}
+        </td>
+    </tr>
+    {% endif %}
+    {% endfor %}
+    {% for invite in invites %}
+    {% if invite.invite_receiver%}
+    <tr>
+        <td searchable>{{ invite.invite_code }}</td>
+        <td>{{ invite.invite_expiration }}</td>
+        <td searchable>{% if invite.invite_receiver %}
+            <a href="/members/{{invite.invite_receiver.member_user_account.username}}">
+                {{ invite.invite_receiver.member_hash_name }}</a>
+            {% endif %}
+        </td>
+    </tr>
+    {% endif %}
+    {% endfor %}
+</tbody>

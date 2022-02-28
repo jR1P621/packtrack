@@ -1,0 +1,16 @@
+<thead>
+    <tr class="header">
+        <th class='col-md-1'>*un</th>
+        <th class='col-md-1'>Date</th>
+    </tr>
+</thead>
+<tbody>
+    {% for event in events %}
+    <tr>
+        <td searchable><a href="/events/{{event.event_id}}">
+                {{ event.event_name }}</a></td>
+        <td searchable>{{ event.event_date }}</td>
+        </td>
+    </tr>
+    {% endfor %}
+</tbody>

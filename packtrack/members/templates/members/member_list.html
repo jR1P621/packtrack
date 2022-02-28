@@ -1,0 +1,10 @@
+{% extends 'members/members_base.html' %}
+{% block sidebar %}
+{% include 'sidebar.html' with active_link='members' %}
+{% endblock sidebar %}
+{% block content %}
+
+<div class="col-1">
+    {% include 'helpers/search_table.html' with color='blue' title='Hashers' table_template='members/member_search_table.html' %}
+</div>
+{% endblock content %}

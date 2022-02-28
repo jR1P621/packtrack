@@ -8,7 +8,7 @@ class Kennel(models.Model):
     kennel_abbr = models.CharField(max_length=16, default='')
     kennel_city = models.CharField(max_length=128, null=True)
     kennel_is_active = models.BooleanField(default=True)
-    kennel_img_path = models.ImageField(null=True)
+    kennel_img = models.ImageField(null=True)
     kennel_about = models.TextField(blank=True, null=True)
     kennel_members = models.ManyToManyField(
         'members.Member',

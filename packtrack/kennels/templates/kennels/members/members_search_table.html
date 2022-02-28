@@ -1,0 +1,30 @@
+<thead>
+    <tr class="header">
+        <th class='col-lg-1'>Hash Name</th>
+        {% if my_membership.membership_is_admin %}
+        <th class='col-lg-1'>Administration</th>
+        {% endif %}
+    </tr>
+</thead>
+<tbody>
+    {% for membership in kennel_membership.all %}
+    {% if membership.membership_is_approved %}
+    <tr>
+        <td searchable class='col-lg-1'><a
+                href="/members/{{membership.membership_member.member_user_account.username}}">{{ membership.membership_member.member_hash_name }}</a>
+        </td>
+        {% if my_membership.membership_is_admin %}
+        <td class='col-lg-1'>
+            <button class="btn-xs pink-bg">Kick</button>
+            {% if membership.membership_is_admin %}
+            <button class="btn-xs orange-bg">Revoke Admin</button>
+            {% else %}
+            <button class="btn-xs yellow-bg">Make Admin</button>
+            {% endif %}
+            {% comment %} {% include 'members/profile/member_kennels.html' %} {% endcomment %}
+        </td>
+        {% endif %}
+    </tr>
+    {% endif %}
+    {% endfor %}
+</tbody>
