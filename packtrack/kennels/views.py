@@ -11,16 +11,23 @@ from django.contrib.auth.models import User
 
 @login_required
 def view_kennel(request, kennel_name):
+    '''
+    Kennel profile
+    '''
+    # Get kennel
     try:
         kennel = Kennel.objects.get(kennel_name=kennel_name)
     except Kennel.DoesNotExist:
         return HttpResponseRedirect(reverse('kennels'))
     else:
+        # Get kennel members
         kennel_membership = KennelMembership.objects.filter(
             membership_kennel=kennel)
         try:
+            # Get user's membership
             my_membership: KennelMembership = kennel_membership.get(
                 membership_member=request.user.member)
+            # Get admin info
             if my_membership.membership_is_admin:
                 consensuses = [{
                     'consensus':
@@ -33,6 +40,7 @@ def view_kennel(request, kennel_name):
                 consensus_members = [
                     c['consensus'].consensus_member for c in consensuses
                 ]
+                # Render admin info
                 return render(
                     request, 'kennels/kennel/kennel.html', {
                         'kennel': kennel,
@@ -43,6 +51,7 @@ def view_kennel(request, kennel_name):
                     })
         except KennelMembership.DoesNotExist:
             my_membership = False
+        # render non-admin info
         return render(
             request, 'kennels/kennel/kennel.html', {
                 'kennel': kennel,
@@ -53,35 +62,42 @@ def view_kennel(request, kennel_name):
 
 @login_required
 def view_create_kennel(request):
+    '''
+    Kennel creation view
+    '''
     if request.method == 'POST':
         f = KennelCreationForm(request.POST)
         if f.is_valid():
             kennel: Kennel = f.save()
+            # Add creating user as kennel admin
             kennel.add_member(request.user.member, approved=True, admin=True)
             messages.success(request, 'Kennel created successfully')
             return HttpResponseRedirect(
                 f'/kennels/profile/{kennel.kennel_name}')
-
     else:
         f = KennelCreationForm()
-
     return render(request, 'kennels/kennel_create.html', {'form': f})
 
 
 class kennelListView(TemplateView):
+    '''
+    Returns search table for kennels
+    '''
     template_name = 'kennels/kennel_list.html'
     user_kennels = False
     kennels = []
 
     def get(self, request):
+        # Get all kennels
         if not self.user_kennels:
             self.kennels = Kennel.objects.all()
             title = 'Kennels'
             color = 'pink'
+        # Get only member's kennels
         else:
             self.kennels = request.user.member.member_kennels.all()
             title = 'My Kennels'
-            color = 'white-text green'
+            color = 'green'
         return render(request, self.template_name, {
             'kennels': self.kennels,
             'title': title,

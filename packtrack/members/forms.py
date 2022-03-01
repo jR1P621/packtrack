@@ -30,6 +30,9 @@ class UserCreationInviteForm(auth_forms.UserCreationForm):
             self.fields[field].widget.attrs['class'] = 'form-control'
 
     def clean_invitecode(self):
+        '''
+        Checks that invite code exists and is not expired or used
+        '''
         invitecode = self.cleaned_data.get("invitecode")
         try:
             invite = InviteCode.objects.get(invite_code=invitecode)
@@ -66,6 +69,9 @@ class UserCreationInviteForm(auth_forms.UserCreationForm):
 
 
 class EditProfileForm(forms.ModelForm):
+    '''
+    Alloes user to modify parts of their profile
+    '''
 
     class Meta:
         model = Member
@@ -86,5 +92,4 @@ class EditProfileForm(forms.ModelForm):
         self.fields['member_avatar'].widget = forms.FileInput()
         for field in self.fields:
             self.fields[field].widget.attrs['class'] = 'form-control'
-        # self.fields['member_avatar'].required = False
         self.fields['member_email'].required = False

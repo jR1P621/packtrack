@@ -9,10 +9,7 @@ class KennelCreationForm(forms.ModelForm):
     A form that creates a new kennel with creating user as a kennel administrator
     """
 
-    # error_messages = {
-    #     'invalid_city': _("Can't find city"),
-    # }
-
+    # Used as button for drop down search choice field
     city = forms.CharField(
         label='City',
         required=False,
@@ -44,10 +41,6 @@ class KennelCreationForm(forms.ModelForm):
         self.fields['kennel_name'].widget.attrs[
             'placeholder'] = 'Dastardly Drinkers Hash House Harriers'
         self.fields['kennel_abbr'].widget.attrs['placeholder'] = 'D2H3'
-        # self.fields['kennel_city'].widget.attrs['class'] = 'hidden'
-
-    # def _post_clean(self):
-    #     super()._post_clean()
 
     def save(self, commit=True):
         kennel = super().save(commit=False)

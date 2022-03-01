@@ -10,10 +10,16 @@ MAX_AVATAR_SIZE = 800
 
 
 def avatar_upload(instance, filename):
+    '''
+    Saves profile picture as a SHA256 hex digest.
+    '''
     return f'member_avatars/{sha256((filename+datetime.datetime.now().ctime()).encode()).hexdigest()}'
 
 
 class Member(models.Model):
+    '''
+    Model for member.  Extends auth.models.User model.
+    '''
     member_user_account = models.OneToOneField(User, on_delete=models.CASCADE)
     member_avatar = models.ImageField(null=True, upload_to=avatar_upload)
     member_hash_name = models.CharField(max_length=64)
@@ -22,11 +28,12 @@ class Member(models.Model):
                                             blank=True,
                                             through='kennels.KennelMembership')
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.member_user_account.username
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
+        # Rescale avatar to max 800px
         if self.member_avatar:
             image = Image.open(self.member_avatar)
             (width, height) = image.size
@@ -40,12 +47,18 @@ class Member(models.Model):
 
 
 class MemberURLs(models.Model):
+    '''
+    STUB. Member links.  Can be used for social media.
+    '''
     url = models.URLField()
     url_member = models.ForeignKey(Member, on_delete=models.CASCADE)
     url_desc = models.CharField(max_length=32)
 
 
 class InviteCode(models.Model):
+    '''
+    An invite code needed for new users to register.
+    '''
     invite_creator = models.ForeignKey(Member,
                                        on_delete=models.SET_NULL,
                                        null=True,
@@ -59,18 +72,12 @@ class InviteCode(models.Model):
                                         null=True,
                                         related_name='invite_receiver')
 
-    # def __str__(self):
-    #     return ','.join([
-    #         self.invite_code,
-    #         str(self.invite_expiration),
-    #         str(self.invite_creator),
-    #         str(self.invite_receiver)
-    #     ])
 
-
-# create associated member object when user account is created
 @receiver(post_save, sender=User)
-def create_member(sender, instance, created, **kwargs):
+def create_member(sender, instance, created, **kwargs) -> None:
+    '''
+    Creates an associated Member instance when a new User is created.
+    '''
     if created:
         Member.objects.create(
             member_user_account=instance,
@@ -79,7 +86,10 @@ def create_member(sender, instance, created, **kwargs):
 
 
 @receiver(pre_delete, sender=Member)
-def delete_unused_invites(sender, instance, **kwargs):
+def delete_unused_invites(sender, instance, **kwargs) -> None:
+    '''
+    Deletes unused InviteCodes when a user deletes their account.
+    '''
     try:
         unused_invites = InviteCode.objects.filter(
             invite_creator=instance, invite_receiver__isnull=True)
