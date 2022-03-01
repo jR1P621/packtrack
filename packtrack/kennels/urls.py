@@ -15,4 +15,8 @@ urlpatterns = [
     path('post/ajax/membership_request',
          views.postMembershipRequest,
          name="post_membership_request"),
+    path('post/ajax/consensus', views.postConsensus, name="post_consensus"),
+    path('post/ajax/consensus_vote',
+         views.postConsensusVote,
+         name="post_consensus_vote"),
 ]

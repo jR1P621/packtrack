@@ -11,13 +11,7 @@
 <!-- Main content -->
 
 <div class="templatemo-content-container">
-    <div class="templatemo-flex-row flex-content-row">
-        <div class="templatemo-content-widget blue-bg text-center col-1 col-lg-6">
-            <h1>
-                {{member.member_hash_name}}
-            </h1>
-        </div>
-    </div>
+    {% include 'helpers/section_title.html' with title=member.member_hash_name widget_class='dark-bg'%}
     <!-- Row 1 -->
     <div class="templatemo-flex-row flex-content-row">
         <div class="templatemo-content-widget white-bg col-2">

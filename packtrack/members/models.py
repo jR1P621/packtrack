@@ -1,9 +1,12 @@
 from hashlib import md5, sha256
+from PIL import Image
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 import datetime
+
+MAX_AVATAR_SIZE = 800
 
 
 def avatar_upload(instance, filename):
@@ -21,6 +24,19 @@ class Member(models.Model):
 
     def __str__(self):
         return self.member_user_account.username
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.member_avatar:
+            image = Image.open(self.member_avatar)
+            (width, height) = image.size
+            if (MAX_AVATAR_SIZE / width < MAX_AVATAR_SIZE / height):
+                factor = MAX_AVATAR_SIZE / height
+            else:
+                factor = MAX_AVATAR_SIZE / width
+            size = (width / factor, height / factor)
+            image = image.resize(size, Image.ANTIALIAS)
+            image.save(self.member_avatar.path)
 
 
 class MemberURLs(models.Model):

@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
-from .models import Kennel, KennelMembership
+from .models import Kennel, KennelAdminConsensus, KennelConsensus, KennelConsensusVote, KennelKickConsensus, KennelMembership
 from django.views.generic import TemplateView
 from .forms import KennelCreationForm
 from django.contrib import messages
@@ -19,8 +19,28 @@ def view_kennel(request, kennel_name):
         kennel_membership = KennelMembership.objects.filter(
             membership_kennel=kennel)
         try:
-            my_membership = kennel_membership.get(
+            my_membership: KennelMembership = kennel_membership.get(
                 membership_member=request.user.member)
+            if my_membership.membership_is_admin:
+                consensuses = [{
+                    'consensus':
+                    c,
+                    'my_vote':
+                    KennelConsensusVote.objects.filter(
+                        vote_consensus=c, vote_elector=request.user.member)
+                } for c in KennelConsensus.objects.filter(
+                    consensus_kennel=kennel)]
+                consensus_members = [
+                    c['consensus'].consensus_member for c in consensuses
+                ]
+                return render(
+                    request, 'kennels/kennel/kennel.html', {
+                        'kennel': kennel,
+                        'my_membership': my_membership,
+                        'kennel_membership': kennel_membership,
+                        'consensuses': consensuses,
+                        'consensus_members': consensus_members
+                    })
         except KennelMembership.DoesNotExist:
             my_membership = False
         return render(
@@ -77,10 +97,7 @@ def postMembershipResponse(request):
             kennel = Kennel.objects.get(kennel_name=request.POST['kennel'])
         except Kennel.DoesNotExist:
             return JsonResponse(
-                {
-                    "error":
-                    f"Cannot find kennel kennel ({request.POST['kennel']})"
-                },
+                {"error": f"Cannot find kennel ({request.POST['kennel']})"},
                 status=400)
         try:
             my_membership = KennelMembership.objects.get(
@@ -135,10 +152,7 @@ def postMembershipRequest(request):
             kennel = Kennel.objects.get(kennel_name=request.POST['kennel'])
         except Kennel.DoesNotExist:
             return JsonResponse(
-                {
-                    "error":
-                    f"Cannot find kennel kennel ({request.POST['kennel']})"
-                },
+                {"error": f"Cannot find kennel ({request.POST['kennel']})"},
                 status=400)
         try:
             my_membership = KennelMembership.objects.get(
@@ -163,4 +177,109 @@ def postMembershipRequest(request):
         # send to client side.
         return JsonResponse({}, status=200)
     # some error occured
+    return JsonResponse({"error": ""}, status=400)
+
+
+@login_required
+def postConsensus(request):
+    # request should be ajax and method should be POST.
+    if request.accepts("application/json") and request.method == "POST":
+        try:
+            kennel = Kennel.objects.get(kennel_name=request.POST['kennel'])
+        except Kennel.DoesNotExist:
+            return JsonResponse(
+                {"error": f"Cannot find kennel ({request.POST['kennel']})"},
+                status=400)
+        try:
+            my_membership = KennelMembership.objects.get(
+                membership_member=request.user.member,
+                membership_kennel=kennel)
+            if not my_membership.membership_is_admin:
+                raise KennelMembership.DoesNotExist
+        except KennelMembership.DoesNotExist:
+            return JsonResponse(
+                {
+                    "error":
+                    f"Could not verify admin rights for user ({request.user.username}) and kennel ({kennel.kennel_name})"
+                },
+                status=400)
+        if request.POST['type'] == 'kick' or request.POST['type'] == 'admin':
+            try:
+                consensus_user = User.objects.get(
+                    username=request.POST["username"])
+                kennel_admin = KennelMembership.objects.filter(
+                    membership_is_admin=True, membership_kennel=kennel)
+                if len(kennel_admin) <= 1 and request.user == consensus_user:
+                    return JsonResponse(
+                        {
+                            "error":
+                            f"You are the last administrator for this kennel ({kennel.kennel_name})"
+                        },
+                        status=400)
+            except User.DoesNotExist:
+                return JsonResponse(
+                    {
+                        "error":
+                        f"Could not find membership for user ({request.POST['username']}) and kennel ({request.POST['kennel']})"
+                    },
+                    status=400)
+            if request.POST['type'] == 'kick':
+                new_consensus = KennelKickConsensus(
+                    consensus_kennel=kennel,
+                    consensus_initiator=request.user.member,
+                    consensus_member=consensus_user.member)
+            elif request.POST['type'] == 'admin':
+                try:
+                    membership = KennelMembership.objects.get(
+                        membership_kennel=kennel,
+                        membership_member=consensus_user.member)
+                except KennelMembership.DoesNotExist:
+                    return JsonResponse(
+                        {
+                            "error":
+                            f"Could not find membership for user ({request.POST['username']}) and kennel ({request.POST['kennel']})"
+                        },
+                        status=400)
+                new_consensus = KennelAdminConsensus(
+                    consensus_kennel=kennel,
+                    consensus_initiator=request.user.member,
+                    consensus_member=consensus_user.member,
+                    consensus_action=(not membership.membership_is_admin))
+                print(new_consensus.consensus_action)
+        new_consensus.save()
+        # send to client side.
+        return JsonResponse({}, status=200)
+    # some error occured
+    return JsonResponse({"error": ""}, status=400)
+
+
+@login_required
+def postConsensusVote(request):
+    if request.accepts("application/json") and request.method == "POST":
+        try:
+            print(request.POST)
+            consensus: KennelConsensus = KennelConsensus.objects.get(
+                id=request.POST['consensus_id'])
+        except KennelConsensus.DoesNotExist:
+            return JsonResponse({"error": f"Cannot find consensus item"},
+                                status=400)
+        try:
+            my_membership = KennelMembership.objects.get(
+                membership_member=request.user.member,
+                membership_kennel=consensus.consensus_kennel)
+            if not my_membership.membership_is_admin:
+                raise KennelMembership.DoesNotExist
+        except KennelMembership.DoesNotExist:
+            return JsonResponse(
+                {
+                    "error":
+                    f"Could not verify admin rights for user ({request.user.username}) and kennel ({consensus.consensus_kennel.kennel_name})"
+                },
+                status=400)
+        new_vote = KennelConsensusVote(vote_consensus=consensus,
+                                       vote_elector=request.user.member,
+                                       vote=(request.POST['vote'] == 'Yes'))
+        new_vote.save()
+        return JsonResponse({}, status=200)
+
     return JsonResponse({"error": ""}, status=400)

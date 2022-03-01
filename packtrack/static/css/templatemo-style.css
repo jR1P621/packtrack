@@ -85,13 +85,18 @@ nav li {
 	color: white;
 }
 
+.dark-text{
+	color: #333;
+}
+
 .dark-bg {
 	color: white;
-	background: #1f2124;
+	background: #333;
 }
 
 .green-bg {
 	background-color: #39ADB4;
+		color: white;
 }
 
 .yellow-bg {
@@ -190,7 +195,11 @@ nav li {
 }
 
 .no-border {
-	border: none;
+	border: none !important;
+}
+
+.no-box-shadow {
+	box-shadow: none !important;
 }
 
 .border-radius-10 {
@@ -231,15 +240,19 @@ footer {
 	margin: 25px 30px;
 }
 
-.templatemo-site-header h1 {
-	color: white;
+.templatemo-site-header h1,
+.templatemo-section-title h1 {
 	display: inline-block;
 	font-size: 1.8em;
 	font-weight: 400;
 	letter-spacing: 1.5px;
 	margin: 0 5px;
-	text-transform: uppercase;
 	vertical-align: middle;
+}
+
+.templatemo-site-header h1 {
+	color: white;
+	text-transform: uppercase;
 }
 
 .profile-photo-container {
@@ -923,8 +936,8 @@ input[type="radio"]:checked+label span {
 /* 8. Media Queries
 ------------------------------*/
 @media screen and (max-width: 1199px) and (min-width: 991px) {
-	.templatemo-site-header {
-		margin: 25px;
+.templatemo-site-header{
+	margin: 25px;
 	}
 
 	.templatemo-sidebar {
@@ -965,7 +978,8 @@ input[type="radio"]:checked+label span {
 		width: 200px;
 	}
 
-	.templatemo-site-header h1 {
+	.templatemo-site-header h1,
+.templatemo-section-title h1 {
 		font-size: 1.6em;
 	}
 
@@ -1087,4 +1101,8 @@ input[type="radio"]:checked+label span {
 		padding-top: 9px;
 		padding-left: 11px;
 	}
+}
+
+.templatemo-section-title {
+	margin: 0px;
 }
