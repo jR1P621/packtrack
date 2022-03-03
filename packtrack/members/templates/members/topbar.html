@@ -4,27 +4,9 @@
     <div class="row">
         <nav class="templatemo-top-nav col-lg-12 col-md-12">
             <ul class="text-uppercase">
-                <li>
-                    {% if member.id != user.member.id %}
-                    <a href="/members" class="active">
-                        {% else %} <a href="/members">
-                            {% endif %}
-                            Members</a>
-                </li>
-                <li>
-                    {% if member.id == user.member.id %}
-                    <a href="#" class="active">
-                        {% else %} <a href="/members/{{user.username}}">
-                            {% endif %}
-                            My Profile</a>
-                </li>
-                <li>
-                    {% if request.get_full_path == '/edit-profile' %}
-                    <a href="#" class="active">
-                        {% else %} <a href="/edit-profile">
-                            {% endif %}
-                            Edit Profile</a>
-                </li>
+                {% include 'helpers/bar_link.html' with location='topbar' text='Members' url='/members' %}
+                {% include 'helpers/bar_link.html' with location='topbar' text='My Profile' url='/members/'|add:user.username%}
+                {% include 'helpers/bar_link.html' with location='topbar' text='Edit Profile' url='/edit-profile' %}
             </ul>
         </nav>
     </div>

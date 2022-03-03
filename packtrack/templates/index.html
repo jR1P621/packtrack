@@ -5,10 +5,14 @@
 
 <body>
   <div class="templatemo-flex-row">
-    {% block sidebar %}{% endblock sidebar %}
-    <div class="templatemo-content col-1 light-gray-bg">
+    {% include 'sidebar.html' %}
+    <div id="right_side_id" class="templatemo-content col-1 light-gray-bg">
+      {% if right_side %}
+      {{right_side}}
+      {% else %}
       {% block topbar %}{% endblock topbar %}
       {% block content %}{% endblock content %}
+      {% endif %}
     </div>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script> <!-- jQuery -->
     <script src="{%static 'js/jquery-migrate-1.2.1.min.js'%}"></script> <!--  jQuery Migrate Plugin -->

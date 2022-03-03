@@ -4,32 +4,11 @@
     <div class="row">
         <nav class="templatemo-top-nav col-lg-12 col-md-12">
             <ul class="text-uppercase">
-                <li>
-                    {% if request.get_full_path == '/kennels/' or request.get_full_path == '/kennels/mykennels' %}
-                    <a href="/kennels" class="active">
-                        {% else %} <a href="/kennels">
-                            {% endif %}
-                            Browse Kennels</a>
-                </li>
-
+                {% include 'helpers/bar_link.html' with location='topbar' text='Kennels' url='/kennels' %}
                 {% for member_kennel in user.member.member_kennels.all %}
-                <li>
-                    {% if kennel == member_kennel %}
-                    <a href="#" class="active">
-                        {% else %} <a href="/kennels/profile/{{member_kennel.kennel_name}}">
-                            {% endif %}
-                            {{ member_kennel.kennel_abbr }}</a>
-                </li>
-
-
+                {% include 'helpers/bar_link.html' with location='topbar' text=member_kennel.kennel_abbr url='/kennels/profile/'|add:member_kennel.kennel_name %}
                 {% endfor %}
-                <li>
-                    {% if request.get_full_path == '/kennels/create_kennel' %}
-                    <a href="#" class="active">
-                        {% else %} <a href="/kennels/create_kennel">
-                            {% endif %}
-                            Create New Kennel</a>
-                </li>
+                {% include 'helpers/bar_link.html' with location='topbar' text='Create New Kennel' url='/kennels/create_kennel' %}
             </ul>
         </nav>
     </div>

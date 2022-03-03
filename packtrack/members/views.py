@@ -7,6 +7,7 @@ from django.contrib import messages
 from .forms import UserCreationInviteForm, EditProfileForm
 from django.contrib.auth.models import User
 from .models import InviteCode, Member
+from packtrack.views import handle_partial_render
 from django.http import JsonResponse
 from django.core import serializers
 from random import getrandbits
@@ -43,16 +44,26 @@ def edit_profile(request):
                             instance=request.user.member)
         if f.is_valid():
             f.save()
-            m = request.user.member
-            m.member_avatar = f.cleaned_data['member_avatar']
-            m.save()
-            print('saved')
+            new_avatar = f.cleaned_data['member_avatar']
+            print(new_avatar)
+            if new_avatar:
+                m = request.user.member
+                m.member_avatar = new_avatar
+                m.save()
             return HttpResponseRedirect(f'/members/{request.user.username}')
 
     else:
-        f = EditProfileForm(None, instance=request.user.member)
+        f = EditProfileForm(initial={
+            'member_email':
+            request.user.member.member_email,
+            'member_hash_name':
+            request.user.member.member_hash_name
+        },
+                            instance=request.user.member)
 
-    return render(request, 'members/profile/profile_edit.html', {'form': f})
+    return handle_partial_render(request, 'members/profile/profile_edit.html',
+                                 {'form': f}, 'members/members_base.html',
+                                 'Edit Profile')
 
 
 @login_required
@@ -65,9 +76,10 @@ def view_profile(request, username):
         member = Member.objects.get(member_user_account=user)
     except User.DoesNotExist:
         return HttpResponseRedirect(reverse('members'))
-    else:
-        return render(request, 'members/profile/profile.html',
-                      {'member': member})
+    return handle_partial_render(request, 'members/profile/profile.html',
+                                 {'member': member},
+                                 'members/members_base.html',
+                                 member.member_hash_name)
 
 
 @login_required
@@ -79,7 +91,9 @@ def view_dashboard(request):
         invites = InviteCode.objects.filter(invite_creator=request.user.member)
     except InviteCode.DoesNotExist:
         invites = []
-    return render(request, 'dashboard.html', {'invites': invites})
+    return handle_partial_render(request, 'dashboard.html',
+                                 {'invites': invites}, 'index.html',
+                                 "Dashboard")
 
 
 @login_required
@@ -88,7 +102,9 @@ def view_members(request):
     Member search list
     '''
     members = Member.objects.all()
-    return render(request, 'members/member_list.html', {'members': members})
+    return handle_partial_render(request, 'members/member_list.html',
+                                 {'members': members},
+                                 'members/members_base.html', "Members")
 
 
 @login_required

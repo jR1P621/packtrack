@@ -1,3 +1,63 @@
+<script>
+  function clearActiveSidebarLink() {
+    links = document.getElementsByTagName("a")
+    for (var a of links) {
+      a.className = ""
+    }
+  }
+
+  function refreshPage() {
+    followLink(location.pathname)
+  }
+
+  function followLink(url) {
+    $.ajax({
+      type: 'GET',
+      url: url,
+      data: {
+        csrfmiddlewaretoken: '{{ csrf_token }}',
+        partial_render: ''
+      },
+      success: function (response) {
+        clearActiveSidebarLink()
+        setInnerHTML(document.getElementById('right_side_id'), response.html)
+        if (url !== location.pathname) {
+          document.title = response.pageTitle;
+          window.history.pushState({
+            "html": response.html,
+            "pageTitle": response.pageTitle
+          }, "", url);
+        }
+      },
+      error: function (response) {
+        // alert the error if any error occured
+        alert(response["responseJSON"]["error"]);
+      }
+    })
+  }
+
+  window.onpopstate = function (e) {
+    if (e.state) {
+      clearActiveSidebarLink()
+      setInnerHTML(document.getElementById("right_side_id"), e.state.html)
+      document.title = e.state.pageTitle;
+    }
+  };
+
+  function setInnerHTML(elm, html) {
+    elm.innerHTML = html;
+    Array.from(elm.querySelectorAll("script")).forEach(oldScript => {
+      const newScript = document.createElement("script");
+      Array.from(oldScript.attributes)
+        .forEach(attr => newScript.setAttribute(attr.name, attr.value));
+      newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+      oldScript.parentNode.replaceChild(newScript, oldScript);
+    });
+  }
+
+</script>
+
+
 <!-- Left column -->
 <div class="templatemo-sidebar">
   <header class="templatemo-site-header">
@@ -10,61 +70,16 @@
     <div class="profile-photo-overlay"></div>
   </div>
   {% endif %}
-
-  {% comment %}
-  <!-- Search box -->
-  <form class="templatemo-search-form" role="search">
-    <div class="input-group">
-      <button type="submit" class="fa fa-search"></button>
-      <input type="text" class="form-control" placeholder="Search" name="srch-term" id="srch-term">
-    </div>
-  </form> {% endcomment %}
   <div class="mobile-menu-icon">
     <i class="fa fa-bars"></i>
   </div>
   <nav class="templatemo-left-nav">
-    <ul>
-      <li>
-        {% if active_link == 'dashboard' %}
-        <a href="#" class="active">
-          {% else %} <a href="/">
-            {% endif %}
-            <i class="fa fa-bar-chart fa-fw"></i>Dashboard
-          </a>
-      </li>
-      <li>
-        {% if active_link == 'profile' %}
-        <a href="#" class="active">
-          {% else %} <a href="/members/{{user.username}}">
-            {% endif %}
-            <i class="fa fa-user fa-fw"></i>My Profile
-          </a>
-      </li>
-      <li>
-        {% if active_link == 'mykennels' %}
-        <a href="#" class="active">
-          {% else %} <a href="/kennels/mykennels">
-            {% endif %}
-            <i class="fa fa-home fa-fw"></i>My Kennels
-          </a>
-      </li>
-      <li>
-        {% if active_link == 'members' %}
-        <a href="#" class="active">
-          {% else %} <a href="/members">
-            {% endif %}
-            <i class="fa fa-users fa-fw"></i>Browse Members
-          </a>
-      </li>
-      <li>
-        {% if active_link == 'kennels' %}
-        <a href="#" class="active">
-          {% else %} <a href="/kennels">
-            {% endif %}
-            <i class="fa fa-search fa-fw"></i>Browse Kennels
-          </a>
-      </li>
-
+    <ul id='sidebar_links_id'>
+      {% include 'helpers/bar_link.html' with location='sidebar' text='Dashboard' url='/' icon='fa-bar-chart' %}
+      {% include 'helpers/bar_link.html' with location='sidebar' text='My Profile' url='/members/'|add:user.username icon='fa-user' %}
+      {% include 'helpers/bar_link.html' with location='sidebar' text='My Kennels' url='/kennels/mykennels' icon='fa-home' %}
+      {% include 'helpers/bar_link.html' with location='sidebar' text='Browse Members' url='/members' icon='fa-users' %}
+      {% include 'helpers/bar_link.html' with location='sidebar' text='Browse Kennels' url='/kennels' icon='fa-search' %}
       <li><a href="/accounts/logout?next=/"><i class="fa fa-eject fa-fw"></i>Sign Out</a></li>
     </ul>
   </nav>

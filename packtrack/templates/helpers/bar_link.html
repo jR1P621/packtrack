@@ -1,0 +1,10 @@
+<li>
+    {%with id=location|add:'_'|add:text|add:'_id'%}
+    <a id="{{id}}" href="javascript:followLink('{{url}}');">
+        {% if icon %}
+        <i class="fa {{icon}} fa-fw"></i>
+        {% endif %}
+        {{text}}
+    </a>
+    {% endwith %}
+</li>

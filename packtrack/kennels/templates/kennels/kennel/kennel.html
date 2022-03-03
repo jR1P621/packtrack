@@ -1,12 +1,20 @@
-{% extends 'kennels/kennels_base.html' %}
-{% block sidebar %}
-{% if my_membership.membership_is_approved %}
-{% include 'sidebar.html' with active_link='mykennels' %}
+{% block topbar %}
+{% include 'kennels/topbar.html' %}
+{% endblock topbar %}
+
+{% if kennel in user.member.member_kennels.all %}
+<script>
+    document.getElementById("sidebar_My Kennels_id").className = 'active'
+    document.getElementById("topbar_{{kennel.kennel_abbr}}_id").className = 'active'
+
+</script>
 {% else %}
-{% include 'sidebar.html' with active_link='kennels' %}
+<script>
+    document.getElementById("sidebar_Browse Kennels_id").className = 'active'
+    document.getElementById("topbar_Kennels_id").className = 'active'
+
+</script>
 {% endif %}
-{% endblock sidebar %}
-{% block content %}
 
 <div class="templatemo-content-container">
     {% include 'helpers/section_title.html' with title=kennel.kennel_name widget_class='no-box-shadow'%}
@@ -38,5 +46,3 @@
     </div>
     {% endif %}
 </div>
-
-{% endblock %}

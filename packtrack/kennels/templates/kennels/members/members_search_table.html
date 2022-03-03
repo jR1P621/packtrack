@@ -12,7 +12,7 @@
     {% with membership.membership_member as this_member %}
     <tr>
         <td searchable class='col-lg-1'><a
-                href="/members/{{this_member.member_user_account.username}}">{{ this_member.member_hash_name }}</a>
+                href="javascript:followLink('/members/{{this_member.member_user_account.username}}');">{{ this_member.member_hash_name }}</a>
         </td>
         {% if my_membership.membership_is_admin %}
         <td class='col-lg-1' id="{{this_member.member_user_account.username}}">
@@ -60,9 +60,10 @@
                     type,
                     username
                 })
-                for (let element of e.getElementsByTagName('button')) {
-                    element.className = 'hidden'
-                }
+                refreshPage()
+                //for (let element of e.getElementsByTagName('button')) {
+                //    element.className = 'hidden'
+                //}
             },
             error: function (response) {
                 // alert the error if any error occured

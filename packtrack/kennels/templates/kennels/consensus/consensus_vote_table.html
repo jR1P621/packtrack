@@ -47,7 +47,8 @@
                 consensus_id: consensus_id
             },
             success: function (response) {
-                $("#" + consensus_id).html(vote)
+                //$("#" + consensus_id).html(vote)
+                refreshPage()
             },
             error: function (response) {
                 // alert the error if any error occured

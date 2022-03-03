@@ -13,7 +13,7 @@ def avatar_upload(instance, filename):
     '''
     Saves profile picture as a SHA256 hex digest.
     '''
-    return f'member_avatars/{sha256((filename+datetime.datetime.now().ctime()).encode()).hexdigest()}'
+    return f'member_avatars/{sha256((filename+datetime.datetime.now().ctime()).encode()).hexdigest()}.png'
 
 
 class Member(models.Model):
@@ -34,14 +34,15 @@ class Member(models.Model):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         # Rescale avatar to max 800px
-        if self.member_avatar:
+        new_avatar = kwargs.get('member_avatar')
+        if new_avatar:
             image = Image.open(self.member_avatar)
             (width, height) = image.size
-            if (MAX_AVATAR_SIZE / width < MAX_AVATAR_SIZE / height):
+            if (height > width):
                 factor = MAX_AVATAR_SIZE / height
             else:
                 factor = MAX_AVATAR_SIZE / width
-            size = (width / factor, height / factor)
+            size = (int(width / factor), int(height / factor))
             image = image.resize(size, Image.ANTIALIAS)
             image.save(self.member_avatar.path)
 

@@ -1,3 +1,3 @@
 {% for kennel in member.member_kennels.all|dictsort:"kennel_name" %}
-<a href="/kennels/profile/{{ kennel.kennel_name }}">{{ kennel.kennel_name }}</a><br>
+<a href="javascript:followLink('/kennels/profile/{{ kennel.kennel_name }}')">{{ kennel.kennel_name }}</a><br>
 {% endfor %}

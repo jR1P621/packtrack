@@ -42,6 +42,7 @@ class Kennel(models.Model):
                                           membership_is_approved=approved,
                                           membership_is_admin=admin)
         new_membership.save()
+        return new_membership
 
     def __str__(self) -> str:
         return self.kennel_name
@@ -264,7 +265,7 @@ def recheck_kennel_consensuses(sender, instance, **kwargs) -> None:
         kennel = instance.consensus_kennel
     # Admin left the kennel
     elif sender == KennelMembership and instance.membership_is_admin:
-        kennel = instance.consensus_kennel
+        kennel = instance.membership_kennel
     else:
         return
     kennel_consensuses = KennelConsensus.objects.filter(

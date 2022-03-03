@@ -1,8 +1,12 @@
-{% extends 'kennels/kennels_base.html' %}
-{% block sidebar %}
-{% include 'sidebar.html' with active_link='kennels' %}
-{% endblock sidebar %}
-{% block content %}
+{% block topbar %}
+{% include 'kennels/topbar.html' %}
+{% endblock topbar %}
+
+<script>
+    document.getElementById("sidebar_My Kennels_id").className = 'active'
+    document.getElementById("topbar_Create New Kennel_id").className = 'active'
+
+</script>
 
 <div class="templatemo-content-widget templatemo-login-widget white-bg">
     <header class="text-center">
@@ -81,7 +85,7 @@
                 // on successfull creating object
                 // display the newly friend to table.
                 console.log(response)
-                if (input.value.toUpperCase() === currentInput) {
+                if (document.getElementById("city_search").value.toUpperCase() === currentInput) {
                     var newList = ''
                     response['records'].forEach((record) => {
                         let fullName =
@@ -107,5 +111,3 @@
     }
 
 </script>
-
-{% endblock %}

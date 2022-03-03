@@ -8,7 +8,9 @@
 <tbody>
     {% for kennel in kennels %}
     <tr>
-        <td searchable class='col-lg-1'><a href="profile/{{kennel.kennel_name}}">{{ kennel.kennel_name }}</a></td>
+        <td searchable class='col-lg-1'><a
+                href="javascript:followLink('/kennels/profile/{{kennel.kennel_name}}')">{{ kennel.kennel_name }}</a>
+        </td>
         <td searchable class='col-sm-1'>{{ kennel.kennel_abbr }}</td>
         <td searchable class='col-lg-1'>{{ kennel.kennel_city }}</td>
     </tr>

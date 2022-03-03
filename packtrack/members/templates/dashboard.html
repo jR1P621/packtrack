@@ -1,10 +1,8 @@
-{% extends 'index.html' %}
-{% block sidebar %}
-{% include 'sidebar.html' with active_link='dashboard' %}
-{% endblock sidebar %}
-{% block content %}
+<script>
+  document.getElementById("sidebar_Dashboard_id").className = 'active'
 
-<!-- Main content -->
+</script>
+
 
 <div class="templatemo-content-container">
   <!-- Row 1 -->
@@ -12,5 +10,3 @@
     {% include 'dashboard/dashboard_invites.html' with title='Invite Codes' color='green' %}
   </div>
 </div>
-
-{% endblock content %}

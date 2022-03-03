@@ -1,12 +1,21 @@
-{% extends 'members/members_base.html' %}
-{% block sidebar %}
-{% if member.id == user.member.id %}
-{% include 'sidebar.html' with active_link='profile' %}
+{% block topbar %}
+{% include 'members/topbar.html' %}
+{% endblock topbar %}
+
+{% if user.member == member %}
+<script>
+    document.getElementById("sidebar_My Profile_id").className = 'active'
+    document.getElementById("topbar_My Profile_id").className = 'active'
+
+</script>
 {% else %}
-{% include 'sidebar.html' with active_link='members' %}
+<script>
+    document.getElementById("sidebar_Browse Members_id").className = 'active'
+    document.getElementById("topbar_Members_id").className = 'active'
+
+</script>
 {% endif %}
-{% endblock sidebar %}
-{% block content %}
+
 
 <!-- Main content -->
 
@@ -19,9 +28,4 @@
         </div>
         {% include 'members/profile/profile_counts.html' with member=member %}
     </div>
-    {% comment %} <footer class="text-right">
-        <p>Copyright &copy; 2084 Company Name
-            | Design: Template Mo</p>
-    </footer> {% endcomment %}
 </div>
-{% endblock content %}

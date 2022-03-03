@@ -7,6 +7,7 @@ from django.views.generic import TemplateView
 from .forms import KennelCreationForm
 from django.contrib import messages
 from django.contrib.auth.models import User
+from packtrack.views import handle_partial_render
 
 
 @login_required
@@ -41,23 +42,23 @@ def view_kennel(request, kennel_name):
                     c['consensus'].consensus_member for c in consensuses
                 ]
                 # Render admin info
-                return render(
+                return handle_partial_render(
                     request, 'kennels/kennel/kennel.html', {
                         'kennel': kennel,
                         'my_membership': my_membership,
                         'kennel_membership': kennel_membership,
                         'consensuses': consensuses,
                         'consensus_members': consensus_members
-                    })
+                    }, 'kennels/kennels_base.html', kennel.kennel_name)
         except KennelMembership.DoesNotExist:
             my_membership = False
         # render non-admin info
-        return render(
+        return handle_partial_render(
             request, 'kennels/kennel/kennel.html', {
                 'kennel': kennel,
                 'my_membership': my_membership,
                 'kennel_membership': kennel_membership,
-            })
+            }, 'kennels/kennels_base.html', kennel.kennel_name)
 
 
 @login_required
@@ -70,13 +71,24 @@ def view_create_kennel(request):
         if f.is_valid():
             kennel: Kennel = f.save()
             # Add creating user as kennel admin
-            kennel.add_member(request.user.member, approved=True, admin=True)
+            my_membership = kennel.add_member(request.user.member,
+                                              approved=True,
+                                              admin=True)
             messages.success(request, 'Kennel created successfully')
-            return HttpResponseRedirect(
-                f'/kennels/profile/{kennel.kennel_name}')
+            return handle_partial_render(
+                request, 'kennels/kennel/kennel.html', {
+                    'kennel':
+                    kennel,
+                    'my_membership':
+                    my_membership,
+                    'kennel_membership':
+                    KennelMembership.objects.filter(membership_kennel=kennel),
+                }, 'kennels/kennels_base.html', kennel.kennel_name)
     else:
         f = KennelCreationForm()
-    return render(request, 'kennels/kennel_create.html', {'form': f})
+    return handle_partial_render(request, 'kennels/kennel_create.html',
+                                 {'form': f}, 'kennels/kennels_base.html',
+                                 "Create New Kennel")
 
 
 class kennelListView(TemplateView):
@@ -98,11 +110,11 @@ class kennelListView(TemplateView):
             self.kennels = request.user.member.member_kennels.all()
             title = 'My Kennels'
             color = 'green'
-        return render(request, self.template_name, {
+        return handle_partial_render(request, self.template_name, {
             'kennels': self.kennels,
             'title': title,
             'color': color
-        })
+        }, 'kennels/kennels_base.html', title)
 
 
 @login_required

@@ -24,8 +24,9 @@
                 kennel: "{{ kennel }}"
             },
             success: function (response) {
-                location.reload();
-                return false;
+                console.log(response)
+                refreshPage()
+                return false
             },
             error: function (response) {
                 // alert the error if any error occured
