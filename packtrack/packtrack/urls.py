@@ -17,11 +17,26 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from rest_framework import routers
+
+from core.api.urls import router as core_router
+from profiles.api.urls import router as profiles_router
+from kennels.api.urls import router as kennels_router
+from events.api.urls import router as events_router
+
+router = routers.DefaultRouter()
+router.registry.extend(core_router.registry)
+router.registry.extend(profiles_router.registry)
+router.registry.extend(kennels_router.registry)
+router.registry.extend(events_router.registry)
 
 urlpatterns = [
+    path('api/', include(router.urls)),
+    path('api-auth/', include('rest_framework.urls',
+                              namespace='rest_framework')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('admin/', admin.site.urls),
-    path('kennels/', include('kennels.urls')),
-    path('', include('members.urls')),
+    path('', include('core.urls')),
+    path('hashers/', include('profiles.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(
     settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

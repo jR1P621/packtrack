@@ -1,0 +1,17 @@
+{% block count_wrapper %}
+{% block count %}
+
+<div class="templatemo-content-widget {{color}}-bg">
+    <h2 class='text-center'>{{title}}</h2>
+    <h1 id="{{id}}_count" class='text-center templatemo-block margin-10'></h1>
+</div>
+
+<script>
+    window[`{{id}}_populate`] = new Function(
+        "return populate_counter(`{{id}}`, `{{get_url|safe}}`)")
+
+    window[`{{id}}_populate`]()
+
+</script>
+{% endblock %}
+{% endblock %}

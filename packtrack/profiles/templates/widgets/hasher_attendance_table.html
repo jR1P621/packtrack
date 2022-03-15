@@ -1,0 +1,52 @@
+{% extends 'helpers/search_table.html' %}
+
+{% block table_wrapper %}
+{% with color='blue' title='Attendance' widget_class='col-lg-12' get_url='/api/attendance/?user__username='|add:lookup_user.username row_func='attendance_table_row_html' %}
+{{ block.super }}
+{% endwith %}
+{% endblock %}
+
+{% block trow_func %}
+{% if user == profile.user %}
+<script>
+    function attendance_table_row_html(record) {
+        let date = new Date(Date.parse(record.event.date))
+        html = `<tr>` +
+            `<td><a class='intercept' href="/kennels/profile/${record.event.host.name}">${record.event.host.name}</a></td>` +
+            `<td><a class='intercept' href="/events/${record.event.id}">` +
+            (record.is_hare ? '<b>🐇' : '🐶') + ` ${record.event.name}</b></a></td>` +
+            `<td>${date.toDateString()}</td>` +
+            `<td><button class="btn-danger btn-xs">Delete</button></td>` +
+            `</tr>`
+        return html
+    }
+
+</script>
+{% else %}
+<script>
+    function attendance_table_row_html(record) {
+        let date = new Date(Date.parse(record.event.date))
+        html = `<tr>` +
+            `<td><a class='intercept' href="/kennels/profile/${record.event.host.name}">${record.event.host.name}</a></td>` +
+            `<td><a class='intercept' href="/events/${record.event.id}">` +
+            (record.is_hare ? '<b>🐇' : '🐶') + ` ${record.event.name}</b></a></td>` +
+            `<td>${date.toDateString()}</td>` +
+            `</tr>`
+        return html
+    }
+
+</script>
+{% endif %}
+
+{% endblock trow_func %}
+
+{% block thead %}
+<tr class="header">
+    <th class='col-md-6'>Kennel</th>
+    <th class='col-md-4'>Event</th>
+    <th class='col-md-4'>Date</th>
+    {% if user == profile.user %}
+    <th class='col-sm-3'>Actions</th>
+    {% endif %}
+</tr>
+{% endblock thead %}

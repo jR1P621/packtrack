@@ -7,54 +7,9 @@
     </tr>
 </thead>
 <tbody>
-    {% for consensus in consensuses %}
-    <tr>
-        <td searchable class='col-lg-1'>
-            {{consensus.consensus.get_desc}}
-        </td>
-        <td searchable class='col-md-1'>
-            <a
-                href="/members/{{consensus.consensus.consensus_initiator.member_user_account.username}}">{{consensus.consensus.consensus_initiator.member_hash_name}}</a>
-        </td>
-        <td searchable class='col-md-1'>
-            {{consensus.consensus.get_readable_votes}}
-        </td>
-
-        <td class='col-lg-1' id="{{consensus.consensus.id}}">
-            {% if consensus.my_vote.first and consensus.my_vote.first.vote %}
-            Yes
-            {% elif consensus.my_vote.first and not consensus.my_vote.first.vote %}
-            No
-            {% else %}
-            <button class="btn-xs green-bg" onClick="castConsensusVote('Yes','{{consensus.consensus.id}}')">Yes</button>
-            <button class="btn-xs pink-bg" onClick="castConsensusVote(' No','{{consensus.consensus.id}}')">No</button>
-            {% endif %}
-        </td>
+    {% for consensus in active_consensuses %}
+    <tr id="consensus_{{consensus.consensus.id}}_id">
+        {% include 'kennels/consensus/consensus_vote_row.html' with consensus=consensus.consensus my_vote=consensus.my_vote %}
     </tr>
     {% endfor %}
 </tbody>
-
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-<script>
-    function castConsensusVote(vote, consensus_id) {
-        // make POST ajax call
-        $.ajax({
-            type: 'POST',
-            url: "{% url 'post_consensus_vote' %}",
-            data: {
-                csrfmiddlewaretoken: '{{ csrf_token }}',
-                vote: vote,
-                consensus_id: consensus_id
-            },
-            success: function (response) {
-                //$("#" + consensus_id).html(vote)
-                refreshPage()
-            },
-            error: function (response) {
-                // alert the error if any error occured
-                alert(response["responseJSON"]["error"]);
-            }
-        })
-    }
-
-</script>

@@ -1,0 +1,110 @@
+<script>
+    // intercept links for partial renders
+    $(document).ready(function () {
+        setLinkIntercepts()
+    });
+
+    function setLinkIntercepts() {
+        $('a').off()
+        $('a.intercept').on('click', interceptLink)
+    }
+
+    function interceptLink(event) {
+        event.preventDefault()
+        var url = $(this).attr('href')
+        $.ajax({
+            url: url,
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                partial_render: ''
+            },
+            success: function (response) {
+                clearActiveLinks()
+                setInnerHTML(document.getElementById('content'), response.html)
+                if (url !== location.pathname) {
+                    document.title = response.page_title;
+                    window.history.pushState({
+                        "html": response.html,
+                        "pageTitle": response.page_title
+                    }, "", url);
+                } else {
+                    window.history.replaceState({
+                        "html": response.html,
+                        "pageTitle": response.page_title
+                    }, "", url);
+                }
+                setLinkIntercepts()
+            },
+            error: function (response) {
+                // alert the error if any error occured
+                alert(response["responseJSON"]["error"]);
+            }
+        })
+    }
+
+    function postForm(elm) {
+        context = JSON.parse(elm.getAttribute('context'))
+        url = elm.getAttribute('url')
+        populate_elms = JSON.parse(elm.getAttribute('repopulate'))
+        console.log({
+            url,
+            context,
+            populate_elms,
+        })
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                ...context,
+            },
+            success: function (response) {
+                console.log(response)
+                if (populate_elms) {
+                    populate_elms.forEach((e) => {
+                        window[`${e}_populate`.replace(/ /g, "_")]()
+                    })
+                }
+            },
+            error: function (response) {
+                console.log(response)
+                // alert the error if any error occured
+                alert(response["responseJSON"]["error"]);
+            }
+        })
+    }
+
+    function clearActiveLinks() {
+        links = document.getElementsByTagName("a")
+        for (var a of links) {
+            if (a.classList.contains("active")) {
+                a.classList.remove("active")
+            }
+        }
+    }
+
+    function refreshPage() {
+        followLink(location.pathname)
+    }
+
+    window.onpopstate = function (e) {
+        if (e.state) {
+            clearActiveLinks()
+            setInnerHTML(document.getElementById("content"), e.state.html)
+            document.title = e.state.pageTitle;
+        }
+    };
+
+    // sets innerHTML and runs scripts
+    function setInnerHTML(elm, html) {
+        elm.innerHTML = html;
+        Array.from(elm.querySelectorAll("script")).forEach(oldScript => {
+            const newScript = document.createElement("script");
+            Array.from(oldScript.attributes)
+                .forEach(attr => newScript.setAttribute(attr.name, attr.value));
+            newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+            oldScript.parentNode.replaceChild(newScript, oldScript);
+        });
+    }
+
+</script>

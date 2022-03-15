@@ -1,6 +1,6 @@
 <li>
     {%with id=location|add:'_'|add:text|add:'_id'%}
-    <a id="{{id}}" href="javascript:followLink('{{url}}');">
+    <a id="{{id}}" href="{{url}}" class="intercept">
         {% if icon %}
         <i class="fa {{icon}} fa-fw"></i>
         {% endif %}

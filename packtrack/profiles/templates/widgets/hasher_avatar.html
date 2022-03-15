@@ -1,0 +1,10 @@
+{% load static %}
+<div class="templatemo-content-widget white-bg col-2">
+    <img id='avatar' class='img-thumbnail profile-photo-container center-block' src="
+    {% if profile.avatar %}
+    {{profile.avatar.url}}
+    {% else %}
+    {%static 'images/default_avatar.webp'%}
+    {% endif %}
+    " alt="">
+</div>

@@ -1,16 +1,39 @@
+{% block table_wrapper %}
+{% block table %}
+{% block trow_func %}{% endblock trow_func %}
 <div
     class="panel panel-default templatemo-content-widget white-bg no-padding templatemo-overflow-hidden {{widget_class}}">
     <div class="{{color}}-bg white-text panel-body templatemo-position-relative">
         <h2 class="text-uppercase text-center">{{title}}</h2>
     </div>
-    <input class='form-control' type="text" id="{{title}}_search" onkeyup='tableFunction("{{title}}_search"
-        , "{{title}}_table")' placeholder="Search {{title}}">
+    <input class='form-control' type="text" id="{{id}}_search" placeholder="Search {{title}}">
     <div class="table-responsive">
-        <table id="{{title}}_table" class="table table-striped table-bordered">
-            {% include table_template %}
+        <table id="{{id}}_table" class="table table-striped table-bordered">
+            <thead id="{{id}}_thead">
+                {% block thead %}{% endblock thead %}
+            </thead>
+            <tbody id="{{id}}_tbody">
+                {% block tbody %}{% endblock tbody %}
+            </tbody>
         </table>
     </div>
-    {% if button_template %}
-    {% include button_template %}
-    {% endif %}
+    <div class='btn-group-xs' id="{{id}}_tbutton">
+        {% block tbutton %}{% endblock tbutton %}
+    </div>
+    <script>
+        document.getElementById("{{id}}_search").addEventListener("keyup", function (event) {
+            if (event.keyCode === 13) {
+                window[`{{id}}_populate`.replace(/ /g, "_")]();
+                return false;
+            }
+        });
+
+        window[`{{id}}_populate`.replace(/ /g, "_")] = new Function(
+            "return populate_search_table(`{{id}}`, `{{get_url}}`, `{{row_func}}`)")
+
+        window[`{{id}}_populate`.replace(/ /g, "_")]()
+
+    </script>
 </div>
+{% endblock %}
+{% endblock %}

@@ -1,8 +1,0 @@
-{% load static %}
-<img class='img-thumbnail profile-photo-container center-block' src="
-    {% if member.member_avatar %}
-    {{member.member_avatar.url}}
-    {% else %}
-    {%static 'images/default_avatar.webp'%}
-    {% endif %}
-    " alt="">

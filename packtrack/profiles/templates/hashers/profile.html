@@ -1,0 +1,30 @@
+{% include "hashers/topbar.html" %}
+{% include "helpers/active_links_js.html" %}
+{% load static %}
+
+<!-- Main content -->
+
+<div class="templatemo-content-container">
+    {% include 'helpers/section_title.html' with title=profile.hash_name widget_class='dark-bg'%}
+    <!-- Row 1 -->
+    <div class="templatemo-flex-row flex-content-row">
+        <div class="col-2">
+            {% include 'widgets/hasher_avatar.html' %}
+        </div>
+        <div class="col-1">
+            {% include 'widgets/hasher_run_count.html' with lookup_user=profile.user id='profile_runs' %}
+            {% include 'widgets/hasher_hare_count.html' with lookup_user=profile.user id='profile_hares' %}
+        </div>
+        {% include 'widgets/hasher_kennels.html' with lookup_user=profile.user %}
+    </div>
+    <div class="templatemo-flex-row flex-content-row">
+        <div class="col-lg-12">
+            {% include 'widgets/kennel_longevity_table.html' with lookup_user=profile.user id='profile_longevity_table' %}
+        </div>
+    </div>
+    <div class="templatemo-flex-row flex-content-row">
+        <div class="col-lg-12">
+            {% include 'widgets/hasher_attendance_table.html' with lookup_user=profile.user id='profile_attendance_table' %}
+        </div>
+    </div>
+</div>

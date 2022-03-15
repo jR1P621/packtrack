@@ -1,0 +1,8 @@
+<script>
+    {% if active_topbar %}
+        document.getElementById("topbar_{{active_topbar}}_id").classList.add('active')
+    {% endif %}
+    {% if active_sidebar %}
+        document.getElementById("sidebar_{{active_sidebar}}_id").classList.add('active')
+    {% endif %}
+</script>

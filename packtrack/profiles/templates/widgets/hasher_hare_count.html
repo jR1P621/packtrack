@@ -1,0 +1,7 @@
+{% extends 'helpers/count_widget.html' %}
+
+{% block count_wrapper %}
+{% with color='white' title='Hares' get_url="/api/attendance/count/?is_hare=true&user__username="|add:lookup_user.username %}
+{{ block.super }}
+{% endwith %}
+{% endblock %}

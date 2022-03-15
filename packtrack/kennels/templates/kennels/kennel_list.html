@@ -4,14 +4,14 @@
 
 {% if title == 'Kennels' %}
 <script>
-    document.getElementById("sidebar_Browse Kennels_id").className = 'active'
-    document.getElementById("topbar_Kennels_id").className = 'active'
+    document.getElementById("sidebar_Browse Kennels_id").classList.add('active')
+    document.getElementById("topbar_Kennels_id").classList.add('active')
 
 </script>
 {% else %}
 <script>
-    document.getElementById("sidebar_My Kennels_id").className = 'active'
-    document.getElementById("topbar_Kennels_id").className = 'active'
+    document.getElementById("sidebar_My Kennels_id").classList.add('active')
+    document.getElementById("topbar_Kennels_id").classList.add('active')
 
 </script>
 {% endif %}

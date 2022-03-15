@@ -8,7 +8,7 @@
     {% for membership in kennel_membership.all %}
     {% if not membership.membership_is_approved %}
     <tr id="{{membership.membership_member.member_user_account.username}}">
-        <td searchable class='col-lg-1'><a
+        <td searchable class='col-lg-1'><a class='intercept'
                 href="/members/{{membership.membership_member.member_user_account.username}}">{{ membership.membership_member.member_hash_name }}</a>
         </td>
         <td class='col-lg-1'>
@@ -22,7 +22,6 @@
     {% endfor %}
 </tbody>
 
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script>
     function respondMembershipRequest(choice, username) {
         // make POST ajax call

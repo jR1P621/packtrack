@@ -1,0 +1,18 @@
+  <script>
+      function populate_counter(counter_id, get_url) {
+          //console.log(get_url)
+          $.ajax({
+              type: 'GET',
+              url: get_url,
+              data: {
+                  csrfmiddlewaretoken: '{{ csrf_token }}',
+              }
+          }).done(function (response) {
+              console.log(response)
+              document.getElementById(`${counter_id}_count`).innerText = response['count']
+          }).fail(function (response) {
+              alert(response["responseJSON"]["message"]);
+          })
+      }
+
+  </script>

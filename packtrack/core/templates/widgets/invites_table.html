@@ -1,0 +1,40 @@
+{% extends 'helpers/search_table.html' %}
+
+{% block table_wrapper %}
+{% with color='green' title='Invite Codes' widget_class='col-lg-6' get_url='/api/invite_codes/' row_func='invite_table_row_html' %}
+{{ block.super }}
+{% endwith %}
+{% endblock %}
+
+{% block trow_func %}
+<script>
+    function invite_table_row_html(invite) {
+        let expire = new Date(Date.parse(invite["expiration"]))
+        html = `<tr>
+        <td>${invite["code"]}</td>` +
+            (invite["expiration"] ? `<td>${expire.toDateString()}</td>` :
+                `<td class='text-muted'>None</td>`) +
+            (invite["receiver"] ? `<td>
+            <a class='intercept' href="/hashers/${invite['receiver']['username']}">
+                ${invite['receiver']['profile']['hash_name']}</a>
+            </td>` : `<td class='text-muted'>None</td>`) +
+            `</tr >`
+        return html
+    }
+
+</script>
+{% endblock trow_func %}
+
+{% block thead %}
+<tr class="header">
+    <th class='col-md-1'>Code</th>
+    <th class='col-md-1'>Expiration</th>
+    <th class='col-md-1'>Invitee</th>
+</tr>
+{% endblock thead %}
+
+{% block tbutton %}
+<button class='templatemo-blue-button btn-block' onClick="postForm(this)" url='{{get_url}}' repopulate='["{{title}}"]'>
+    Generate New Invite
+</button>
+{% endblock tbutton %}

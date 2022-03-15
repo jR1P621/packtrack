@@ -3,8 +3,8 @@
 {% endblock topbar %}
 
 <script>
-    document.getElementById("sidebar_My Kennels_id").className = 'active'
-    document.getElementById("topbar_Create New Kennel_id").className = 'active'
+    document.getElementById("sidebar_My Kennels_id").classList.add('active')
+    document.getElementById("topbar_Create New Kennel_id").classList.add('active')
 
 </script>
 
@@ -41,7 +41,6 @@
     </form>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script>
     window.onload = function () {
         var hiddenCity = document.getElementById("id_kennel_city");

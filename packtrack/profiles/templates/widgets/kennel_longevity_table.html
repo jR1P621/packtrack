@@ -1,0 +1,47 @@
+{% extends 'helpers/search_table.html' %}
+
+{% block table_wrapper %}
+{% with color='blue' title='Longevity' widget_class='col-lg-12' get_url='/api/longevityrecords/count/?attend__user__username='|add:lookup_user.username row_func='longevity_table_row_html' %}
+{{ block.super }}
+{% endwith %}
+{% endblock %}
+
+{% block trow_func %}
+{% if user == profile.user %}
+<script>
+    function longevity_table_row_html(record) {
+        html = `<tr>` +
+            `<td><a class='intercept' href="/kennels/profile/${record['kennel__name']}">${record['kennel__name']}</a></td>` +
+            `<td>${record['run_count'] + record['legacy_run_count']}</td>` +
+            `<td>${record['hare_count'] + record['legacy_hare_count']}</td>` +
+            `<td class="text-muted"><button class="btn-danger btn-xs">Delete Legacy Counts</button> (${record['legacy_run_count']}|${record['legacy_hare_count']})</td>` +
+            `</tr>`
+        return html
+    }
+
+</script>
+{% else %}
+<script>
+    function longevity_table_row_html(record) {
+        html = `<tr>` +
+            `<td><a class='intercept' href="/kennels/profile/${record['kennel__name']}">${record['kennel__name']}</a></td>` +
+            `<td>${record['run_count'] + record['legacy_run_count']}</td>` +
+            `<td>${record['hare_count'] + record['legacy_hare_count']}</td>` +
+            `</tr>`
+        return html
+    }
+
+</script>
+{% endif %}
+{% endblock trow_func %}
+
+{% block thead %}
+<tr class="header">
+    <th class='col-lg-3'>Kennel</th>
+    <th class='col-md-2'>*uns</th>
+    <th class='col-md-2'>Hares</th>
+    {% if user == profile.user %}
+    <th class='col-lg-3'>Actions</th>
+    {% endif %}
+</tr>
+{% endblock thead %}

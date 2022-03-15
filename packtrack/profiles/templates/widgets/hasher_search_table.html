@@ -1,0 +1,19 @@
+<thead>
+    <tr class="header">
+        <th class='col-lg-1'>Hash Name</th>
+        <th class='col-lg-1'>Kennels</th>
+    </tr>
+</thead>
+
+<tbody>
+    {% for hasher in hashers %}
+    <tr>
+        <td searchable class='col-lg-1'><a class='intercept'
+                href={% url 'profile' username=hasher.member_user_account.username %}>{{ hasher.member_hash_name }}</a>
+        </td>
+        <td searchable class='col-lg-1'>
+            {% include 'hashers/widgets/hasher_kennels.html' %}
+        </td>
+    </tr>
+    {% endfor %}
+</tbody>

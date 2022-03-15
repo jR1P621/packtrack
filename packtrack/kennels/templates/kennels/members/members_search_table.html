@@ -9,67 +9,9 @@
 <tbody>
     {% for membership in kennel_membership.all %}
     {% if membership.membership_is_approved %}
-    {% with membership.membership_member as this_member %}
-    <tr>
-        <td searchable class='col-lg-1'><a
-                href="javascript:followLink('/members/{{this_member.member_user_account.username}}');">{{ this_member.member_hash_name }}</a>
-        </td>
-        {% if my_membership.membership_is_admin %}
-        <td class='col-lg-1' id="{{this_member.member_user_account.username}}">
-            {% if not this_member in consensus_members %}
-            <button id='btn-kick' class="btn-xs pink-bg" onClick="createConsensus({{this_member.member_user_account.username}}, 'kick',
-                '{{this_member.member_user_account.username}}')">Kick</button>
-            {% if membership.membership_is_admin %}
-            <button id='btn-admin' class="btn-xs orange-bg" onClick="createConsensus({{this_member.member_user_account.username}},'admin',
-                '{{this_member.member_user_account.username}}')">Revoke
-                Admin</button>
-            {% else %}
-            <button id='btn-admin' class="btn-xs yellow-bg" onClick="createConsensus({{this_member.member_user_account.username}},'admin',
-                '{{this_member.member_user_account.username}}')">Make
-                Admin</button>
-            {% endif %}
-            {% else %}
-            <span class="text-muted">Pending Admin Consensus</span>
-            {% endif %}
-        </td>
-        {% endif %}
+    <tr id="members_{{membership.membership_member.id}}_id">
+        {% include 'kennels/members/members_search_row.html' with this_member=membership.membership_member %}
     </tr>
-
-    {% endwith %}
-
     {% endif %}
     {% endfor %}
 </tbody>
-
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-<script>
-    function createConsensus(e, type, username) {
-        // make POST ajax call
-        $.ajax({
-            type: 'POST',
-            url: "{% url 'post_consensus' %}",
-            data: {
-                csrfmiddlewaretoken: '{{ csrf_token }}',
-                type: type,
-                kennel: "{{ kennel }}",
-                username: username
-            },
-            success: function (response) {
-                console.log({
-                    e,
-                    type,
-                    username
-                })
-                refreshPage()
-                //for (let element of e.getElementsByTagName('button')) {
-                //    element.className = 'hidden'
-                //}
-            },
-            error: function (response) {
-                // alert the error if any error occured
-                alert(response["responseJSON"]["error"]);
-            }
-        })
-    }
-
-</script>

@@ -1,0 +1,7 @@
+{% extends 'helpers/count_widget.html' %}
+
+{% block count_wrapper %}
+{% with color='white' title='*uns' get_url='/api/attendance/count/?user__username='|add:lookup_user.username %}
+{{ block.super }}
+{% endwith %}
+{% endblock %}

@@ -1,0 +1,22 @@
+<td searchable class='col-lg-1'><a class='intercept'
+        href="{% url 'profile' username=this_member.member_user_account.username %}">{{ this_member.member_hash_name }}</a>
+</td>
+{% if my_membership.membership_is_admin %}
+<td class='col-lg-1' id="{{this_member.member_user_account.username}}">
+    {% if not this_member in consensus_members %}
+    <button id='btn-kick' class="btn-xs pink-bg" onClick="postForm(this)" url="{% url 'post_consensus' %}"
+        context='{"kennel_id":{{kennel.id}},"type":"kick","member_id":{{this_member.id}}}'>Kick</button>
+    {% if membership.membership_is_admin %}
+    <button id='btn-admin' class="btn-xs orange-bg" onClick="postForm(this)" url="{% url 'post_consensus' %}"
+        context='{"kennel_id":{{kennel.id}},"type":"admin","member_id":{{this_member.id}}}'>Revoke
+        Admin</button>
+    {% else %}
+    <button id='btn-admin' class="btn-xs yellow-bg" onClick="postForm(this)" url="{% url 'post_consensus' %}"
+        context='{"kennel_id":{{kennel.id}},"type":"admin","member_id":{{this_member.id}}}'>Make
+        Admin</button>
+    {% endif %}
+    {% else %}
+    <span class="text-muted">Pending Admin Consensus</span>
+    {% endif %}
+</td>
+{% endif %}

@@ -1,0 +1,23 @@
+ <td searchable class='col-lg-1'>
+     {{consensus.get_desc}}
+ </td>
+ <td searchable class='col-md-1'>
+     <a class='intercept'
+         href="{% url 'profile' username=consensus.consensus_initiator.member_user_account.username %}">{{consensus.consensus_initiator.member_hash_name}}</a>
+ </td>
+ <td searchable class='col-md-1'>
+     {{consensus.get_readable_votes}}
+ </td>
+
+ <td class='col-lg-1'>
+     {% if my_vote and my_vote.vote %}
+     Yes
+     {% elif my_vote and not my_vote.vote %}
+     No
+     {% else %}
+     <button class="btn-xs green-bg" onClick="postForm(this)" url="{% url 'post_consensus_vote' %}"
+         context='{"vote":"Yes","consensus_id":{{consensus.id}}}'>Yes</button>
+     <button class="btn-xs pink-bg" onClick="postForm(this)" url="{% url 'post_consensus_vote' %}"
+         context='{"vote":"No","consensus_id":{{consensus.id}}}'>No</button>
+     {% endif %}
+ </td>

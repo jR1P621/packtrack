@@ -1,0 +1,17 @@
+{% include "hashers/topbar.html" %}
+{% include "helpers/active_links_js.html" %}
+
+<div class='templatemo-content-widget templatemo-login-widget white-bg'>
+    <header class="text-center">
+        <h1>Edit Profile</h1>
+    </header>
+    <form method="post" enctype="multipart/form-data" class="templatemo-login-form">
+        {% csrf_token %}
+        {% include 'helpers/form_field.html' with field=form.member_avatar %}
+        {% include 'helpers/form_field.html' with field=form.member_hash_name %}
+        {% include 'helpers/form_field.html' with field=form.member_email %}
+        <div class="form-group">
+            <input type="submit" value="Save" class="templatemo-blue-button width-100">
+        </div>
+    </form>
+</div>

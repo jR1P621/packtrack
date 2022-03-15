@@ -1,26 +1,33 @@
   <script>
-      function tableFunction(input_id, table_id) {
-          // Declare variables
-          var input, filter, table, tr, td, i, txtValue;
-          input = document.getElementById(input_id);
-          filter = input.value.toUpperCase();
-          table = document.getElementById(table_id);
-          trs = table.getElementsByTagName("tr");
-          // Loop through all table rows, and hide those who don't match the search query
-          for (let tr of trs) {
-              tds = tr.getElementsByTagName("td");
-              for (let td of tds) {
-                  console.log(td)
-                  if (!td.hasAttribute("searchable"))
-                      continue
-                  tr.style.display = "none";
-                  txtValue = td.textContent || td.innerText;
-                  if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                      tr.style.display = "";
-                      break
-                  }
-              }
+      function populate_search_table(table_id, get_url, row_html_func) {
+          search_text = document.getElementById(`${table_id}_search`).value
+          if (!search_text) {
+              search_text = ""
           }
+          $.ajax({
+              type: 'GET',
+              url: get_url,
+              data: {
+                  csrfmiddlewaretoken: '{{ csrf_token }}',
+                  search: search_text
+              }
+          }).done(function (response) {
+              console.log(response)
+              table_body = document.getElementById(`${table_id}_tbody`)
+              table_body.innerHTML = ""
+              response['results'].forEach((result) => {
+                  new_row = table_body.insertRow()
+                  new_row.innerHTML = window[row_html_func](result)
+              })
+              if (!search_text) {
+                  document.getElementById(`${table_id}_tbutton`).classList.remove('hidden')
+              } else {
+                  document.getElementById(`${table_id}_tbutton`).classList.add('hidden')
+              }
+              setLinkIntercepts()
+          }).fail(function (response) {
+              alert(response["responseJSON"]["message"]);
+          })
       }
 
   </script>
