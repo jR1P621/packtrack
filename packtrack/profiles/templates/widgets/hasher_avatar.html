@@ -1,5 +1,5 @@
 {% load static %}
-<div class="templatemo-content-widget white-bg col-2">
+<div class="templatemo-content-widget white-bg col-2 {% if not profile.avatar %} visible-lg {% endif %}">
     <img id='avatar' class='img-thumbnail profile-photo-container center-block' src="
     {% if profile.avatar %}
     {{profile.avatar.url}}

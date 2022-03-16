@@ -3,12 +3,14 @@
         {{ field.errors }}
     </div>
     <div class="input-group">
+        {% if icon or field.label %}
         <div class="input-group-addon">
             {% if icon %} <i class="fa {{icon}} fa-fw"></i>
             {% else %}
             <label style="margin:0">{{field.label}}</label>
             {% endif %}
         </div>
+        {% endif %}
         {{field}}
     </div>
     {{ field.help_text }}

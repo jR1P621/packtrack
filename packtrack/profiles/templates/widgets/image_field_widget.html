@@ -1,0 +1,3 @@
+{% if widget.is_initial %}<img src="{{ widget.value.url }}" alt="">
+{% endif %}
+<input type="{{ widget.type }}" name="{{ widget.name }}" {% include "django/forms/widgets/attrs.html" %}>

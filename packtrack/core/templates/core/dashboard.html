@@ -4,6 +4,21 @@
 <div class="templatemo-content-container">
   <!-- Row 1 -->
   <div class="templatemo-flex-row flex-content-row">
-    {% include 'widgets/invites_table.html' with id='dashboard_invites' %}
+    <div class="col-1">
+      <div class="templatemo-flex-row">
+        {% include 'widgets/hasher_run_count.html' with lookup_user=user id='dashboard_runs' widget_class="col-lg-12" %}
+        {% include 'widgets/hasher_hare_count.html' with lookup_user=user id='dashboard_hares' widget_class="col-lg-12" %}
+        <div class='hidden-lg col-2'>
+          {% include 'widgets/hasher_kennel_list.html' with lookup_user=user id='dashboard_kennels_sm' %}
+        </div>
+      </div>
+      <div class="visible-lg">
+        {% include 'widgets/hasher_kennel_list.html' with lookup_user=user id='dashboard_kennels_lg' %}
+      </div>
+    </div>
+
+    <div class="col-1">
+      {% include 'widgets/invites_table.html' with id='dashboard_invites' %}
+    </div>
   </div>
 </div>

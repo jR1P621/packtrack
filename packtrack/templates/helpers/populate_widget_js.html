@@ -1,0 +1,88 @@
+  <script>
+      function populate_counter(counter_id, get_url) {
+          //console.log(get_url)
+          $.ajax({
+              type: 'GET',
+              url: get_url,
+              data: {
+                  csrfmiddlewaretoken: '{{ csrf_token }}',
+              }
+          }).done(function (response) {
+              console.log(response)
+              document.getElementById(`${counter_id}_count`).innerText = response['count']
+          }).fail(function (response) {
+              alert(response["responseJSON"]["message"]);
+          })
+      }
+
+      function populate_list_widget(table_id, get_url, row_html_func) {
+          console.log({
+              table_id,
+              get_url,
+              row_html_func
+          })
+          $.ajax({
+              type: 'GET',
+              url: get_url,
+              data: {
+                  csrfmiddlewaretoken: '{{ csrf_token }}',
+              }
+          }).done(function (response) {
+              console.log(response)
+              table_body = document.getElementById(`${table_id}_tbody`)
+              if (response['count'] === 0) {
+                  new_row = table_body.insertRow()
+                  new_row.innerHTML = `<td class="text-muted text-center">
+                      <i>Nothing to see here</i>
+                  </td>`
+              } else {
+                  table_body.innerHTML = ""
+                  response['results'].forEach((result) => {
+                      new_row = table_body.insertRow()
+                      new_row.innerHTML = window[row_html_func](result)
+                  })
+                  setLinkIntercepts()
+              }
+          }).fail(function (response) {
+              alert(response["responseJSON"]["message"]);
+          })
+      }
+
+      function populate_search_table(table_id, get_url, row_html_func) {
+          search_text = document.getElementById(`${table_id}_search`).value
+          if (!search_text) {
+              search_text = ""
+          }
+          $.ajax({
+              type: 'GET',
+              url: get_url,
+              data: {
+                  csrfmiddlewaretoken: '{{ csrf_token }}',
+                  search: search_text
+              }
+          }).done(function (response) {
+              console.log(response)
+              table_body = document.getElementById(`${table_id}_tbody`)
+              if (!search_text) {
+                  document.getElementById(`${table_id}_tbutton`).classList.remove('hidden')
+              } else {
+                  document.getElementById(`${table_id}_tbutton`).classList.add('hidden')
+              }
+              if (response['count'] === 0) {
+                  table_body.innerHTML = `<td class="text-muted text-center" colspan=100%>
+                      <i>Nothing to see here</i>
+                  </td>`
+              } else {
+                  table_body.innerHTML = ""
+                  response['results'].forEach((result) => {
+                      new_row = table_body.insertRow()
+                      new_row.innerHTML = window[row_html_func](result)
+                  })
+                  setLinkIntercepts()
+              }
+          }).fail(function (response) {
+              alert(response["responseJSON"]["message"]);
+          })
+      }
+
+  </script>

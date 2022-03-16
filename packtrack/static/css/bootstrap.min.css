@@ -4022,6 +4022,11 @@ tbody.collapse.in {
     border-collapse: separate
 }
 
+.input-group img{
+    width: 100%;
+	object-fit: scale-down;
+}
+
 .input-group[class*=col-] {
     float: none;
     padding-right: 0;

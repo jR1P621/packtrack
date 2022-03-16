@@ -7,9 +7,9 @@
     </header>
     <form method="post" enctype="multipart/form-data" class="templatemo-login-form">
         {% csrf_token %}
-        {% include 'helpers/form_field.html' with field=form.member_avatar %}
-        {% include 'helpers/form_field.html' with field=form.member_hash_name %}
-        {% include 'helpers/form_field.html' with field=form.member_email %}
+        {% include 'helpers/form_field.html' with field=form.avatar %}
+        {% include 'helpers/form_field.html' with field=form.hash_name %}
+        {% include 'helpers/form_field.html' with field=form.email %}
         <div class="form-group">
             <input type="submit" value="Save" class="templatemo-blue-button width-100">
         </div>

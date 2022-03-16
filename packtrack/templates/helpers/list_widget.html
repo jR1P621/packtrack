@@ -1,0 +1,22 @@
+{% block table_wrapper %}
+{% block table %}
+{% block trow_func %}{% endblock trow_func %}
+<div class="templatemo-content-widget white-bg {{widget_class}}">
+    <h2 class="text-uppercase text-center margin-bottom-30">{{title}}</h2>
+    <div class="table-responsive">
+        <table id="{{id}}_table" class="table">
+            <tbody id="{{id}}_tbody">
+                {% block tbody %}{% endblock tbody %}
+            </tbody>
+        </table>
+    </div>
+    <script>
+        window[`{{id}}_populate`] = new Function(
+            "return populate_list_widget(`{{id}}`, `{{get_url}}`, `{{row_func}}`)")
+
+        window[`{{id}}_populate`]()
+
+    </script>
+</div>
+{% endblock %}
+{% endblock %}

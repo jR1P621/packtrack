@@ -1,0 +1,31 @@
+{% extends 'helpers/search_table.html' %}
+
+{% block table_wrapper %}
+{% with color='pink' title='Hashers' get_url='/api/users/' row_func='profile_table_row_html' %}
+{{ block.super }}
+{% endwith %}
+{% endblock %}
+
+{% block trow_func %}
+<script>
+    function profile_table_row_html(record) {
+        html = `<tr>` +
+            `<td><a class='intercept' href="/hashers/${record.username}">${record.profile.hash_name}</a></td>` +
+            `<td>`
+        record.membership.forEach((m) => {
+            html +=
+                `<a class='intercept' href="/kennels/profile/${m.kennel.name}">${m.kennel.name}</a><br>`
+        })
+        html += `</td></tr>`
+        return html
+    }
+
+</script>
+{% endblock trow_func %}
+
+{% block thead %}
+<tr class="header">
+    <th class='col-md-2'>Hash Name</th>
+    <th class='col-md-3'>Kennels</th>
+</tr>
+{% endblock thead %}

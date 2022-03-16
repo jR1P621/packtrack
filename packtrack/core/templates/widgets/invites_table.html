@@ -1,7 +1,7 @@
 {% extends 'helpers/search_table.html' %}
 
 {% block table_wrapper %}
-{% with color='green' title='Invite Codes' widget_class='col-lg-6' get_url='/api/invite_codes/' row_func='invite_table_row_html' %}
+{% with color='green' title='Invite Codes' get_url='/api/invite_codes/' row_func='invite_table_row_html' %}
 {{ block.super }}
 {% endwith %}
 {% endblock %}
@@ -10,14 +10,12 @@
 <script>
     function invite_table_row_html(invite) {
         let expire = new Date(Date.parse(invite["expiration"]))
-        html = `<tr>
-        <td>${invite["code"]}</td>` +
-            (invite["expiration"] ? `<td>${expire.toDateString()}</td>` :
+        html = `<tr>` +
+            `<td>${invite["code"]}</td>` +
+            (invite["expiration"] ? `<td>${expire.toDateString()}</td>` : `<td class='text-muted'>None</td>`) +
+            (invite["receiver"] ?
+                `<td><a class='intercept' href="/hashers/${invite['receiver']['username']}">${invite['receiver']['profile']['hash_name']}</a></td>` :
                 `<td class='text-muted'>None</td>`) +
-            (invite["receiver"] ? `<td>
-            <a class='intercept' href="/hashers/${invite['receiver']['username']}">
-                ${invite['receiver']['profile']['hash_name']}</a>
-            </td>` : `<td class='text-muted'>None</td>`) +
             `</tr >`
         return html
     }
@@ -34,7 +32,7 @@
 {% endblock thead %}
 
 {% block tbutton %}
-<button class='templatemo-blue-button btn-block' onClick="postForm(this)" url='{{get_url}}' repopulate='["{{title}}"]'>
+<button class='templatemo-blue-button btn-block' onClick="postForm(this)" url='{{get_url}}' repopulate='["{{id}}"]'>
     Generate New Invite
 </button>
 {% endblock tbutton %}

@@ -62,7 +62,7 @@
                 console.log(response)
                 if (populate_elms) {
                     populate_elms.forEach((e) => {
-                        window[`${e}_populate`.replace(/ /g, "_")]()
+                        window[`${e}_populate`]()
                     })
                 }
             },

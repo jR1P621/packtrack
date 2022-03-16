@@ -267,6 +267,7 @@ class LongevityRecordViewSet(viewsets.ModelViewSet):
             key=lambda r: r['run_count'] + r['hare_count'] + r[
                 'legacy_run_count'] + r['legacy_hare_count'],
             reverse=True)
+        content['count'] = len(content['results'])
         return Response(content, status=status.HTTP_200_OK)
 
 

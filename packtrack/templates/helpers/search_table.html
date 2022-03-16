@@ -23,15 +23,15 @@
     <script>
         document.getElementById("{{id}}_search").addEventListener("keyup", function (event) {
             if (event.keyCode === 13) {
-                window[`{{id}}_populate`.replace(/ /g, "_")]();
+                window[`{{id}}_populate`]();
                 return false;
             }
         });
 
-        window[`{{id}}_populate`.replace(/ /g, "_")] = new Function(
+        window[`{{id}}_populate`] = new Function(
             "return populate_search_table(`{{id}}`, `{{get_url}}`, `{{row_func}}`)")
 
-        window[`{{id}}_populate`.replace(/ /g, "_")]()
+        window[`{{id}}_populate`]()
 
     </script>
 </div>

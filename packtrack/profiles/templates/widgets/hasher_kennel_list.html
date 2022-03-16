@@ -1,0 +1,19 @@
+{% extends 'helpers/list_widget.html' %}
+
+{% block table_wrapper %}
+{% with color='white' title='Kennels' get_url='/api/kennels/?members__username='|add:lookup_user.username row_func='kennel_list_row_html' %}
+{{ block.super }}
+{% endwith %}
+{% endblock %}
+
+{% block trow_func %}
+<script>
+    function kennel_list_row_html(record) {
+        html = `<tr>` +
+            `<td><a class='intercept' href="/kennels/profile/${record['name']}">${record['name']}</a></td>` +
+            `</tr >`
+        return html
+    }
+
+</script>
+{% endblock trow_func %}

@@ -11,11 +11,15 @@
         <div class="col-2">
             {% include 'widgets/hasher_avatar.html' %}
         </div>
-        <div class="col-1">
-            {% include 'widgets/hasher_run_count.html' with lookup_user=profile.user id='profile_runs' %}
-            {% include 'widgets/hasher_hare_count.html' with lookup_user=profile.user id='profile_hares' %}
+        <div class="templatemo-flex-row hidden-lg">
+            {% include 'widgets/hasher_run_count.html' with lookup_user=profile.user id='profile_runs_sm' widget_class="col-sm-12" %}
+            {% include 'widgets/hasher_hare_count.html' with lookup_user=profile.user id='profile_hares_sm' widget_class="col-sm-12" %}
         </div>
-        {% include 'widgets/hasher_kennels.html' with lookup_user=profile.user %}
+        <div class="col-1 visible-lg">
+            {% include 'widgets/hasher_run_count.html' with lookup_user=profile.user id='profile_runs_lg' %}
+            {% include 'widgets/hasher_hare_count.html' with lookup_user=profile.user id='profile_hares_lg' %}
+        </div>
+        {% include 'widgets/hasher_kennel_list.html' with lookup_user=profile.user id='profile_kennels' widget_class="col-2" %}
     </div>
     <div class="templatemo-flex-row flex-content-row">
         <div class="col-lg-12">

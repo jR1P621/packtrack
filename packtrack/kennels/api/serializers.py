@@ -22,7 +22,7 @@ class KennelSerializer(NestedDynamicFieldsModelSerializer,
 
     class Meta:
         model = models.Kennel
-        fields = ['url', 'name', 'acronym', 'city', 'membership']
+        fields = ['url', 'name', 'acronym', 'city', 'membership', 'is_active']
         read_only_fields = ['membership']
 
     def get_membership(self, instance):

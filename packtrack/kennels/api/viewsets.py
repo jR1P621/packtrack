@@ -50,7 +50,8 @@ class KennelViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows kennels to be created, viewed, or edited.
     """
-    queryset = models.Kennel.objects.all()
+    queryset = models.Kennel.objects.all().order_by('name').order_by(
+        '-is_active')
     serializer_class = serializers.KennelSerializer
     permission_classes = [KennelPermission]
     http_method_names = ['get', 'head', 'put', 'patch', 'options', 'post']
