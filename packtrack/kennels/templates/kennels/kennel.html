@@ -1,0 +1,11 @@
+{% include "kennels/topbar.html" %}
+{% include "helpers/active_links_js.html" %}
+{% load static %}
+
+<div class="templatemo-content-container">
+    {% include 'helpers/section_title.html' with title=kennel.name widget_class='no-box-shadow'%}
+    <!-- Row 1 -->
+    <div class="templatemo-flex-row flex-content-row">
+        {% include 'widgets/kennel_about_widget.html' with kennel=kennel %}
+    </div>
+</div>

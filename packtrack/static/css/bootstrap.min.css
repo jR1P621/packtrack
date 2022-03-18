@@ -1566,7 +1566,8 @@ p {
 }
 
 .text-muted {
-    color: #777
+    color: #777;
+    font-style: italic;
 }
 
 .text-primary {

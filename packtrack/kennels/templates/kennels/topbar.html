@@ -5,10 +5,10 @@
         <nav class="templatemo-top-nav col-lg-12 col-md-12">
             <ul class="text-uppercase">
                 {% include 'helpers/bar_link.html' with location='topbar' text='Kennels' url='/kennels' %}
-                {% for member_kennel in user.member.member_kennels.all %}
-                {% include 'helpers/bar_link.html' with location='topbar' text=member_kennel.kennel_abbr url='/kennels/profile/'|add:member_kennel.kennel_name %}
+                {% for kennel in user.kennels.all %}
+                {% include 'helpers/bar_link.html' with location='topbar' text=kennel.acronym url='/kennels/'|add:kennel.name %}
                 {% endfor %}
-                {% include 'helpers/bar_link.html' with location='topbar' text='Create New Kennel' url='/kennels/create_kennel' %}
+                {% include 'helpers/bar_link.html' with location='topbar' text='Create New Kennel' url='/create_kennel' %}
             </ul>
         </nav>
     </div>

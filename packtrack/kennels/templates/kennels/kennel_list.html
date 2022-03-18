@@ -1,22 +1,6 @@
-{% block topbar %}
-{% include 'kennels/topbar.html' %}
-{% endblock topbar %}
-
-{% if title == 'Kennels' %}
-<script>
-    document.getElementById("sidebar_Browse Kennels_id").classList.add('active')
-    document.getElementById("topbar_Kennels_id").classList.add('active')
-
-</script>
-{% else %}
-<script>
-    document.getElementById("sidebar_My Kennels_id").classList.add('active')
-    document.getElementById("topbar_Kennels_id").classList.add('active')
-
-</script>
-{% endif %}
-
+{% include "kennels/topbar.html" %}
+{% include "helpers/active_links_js.html" %}
 
 <div class="col-1">
-    {% include 'helpers/search_table.html' with table_template='kennels/kennel_search_table.html' %}
+    {% include 'widgets/kennel_search_table.html' with id='kennels_table' %}
 </div>

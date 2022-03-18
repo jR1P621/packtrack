@@ -1,72 +1,56 @@
-# from django.shortcuts import render
-# from django.contrib.auth.decorators import login_required
-# from django.http import HttpResponseRedirect, JsonResponse
-# from django.urls import reverse
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect, JsonResponse
+from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
 
-# from members.models import Member
-# from .models import Kennel, KennelAdminConsensus, KennelConsensus, KennelConsensusVote, KennelKickConsensus, KennelMembership
-# from django.views.generic import TemplateView
-# from .forms import KennelCreationForm
-# from django.contrib import messages
-# from django.contrib.auth.models import User
-# from packtrack.views import handle_partial_render
-# from django.template.loader import render_to_string
-# from django.db import models
-# from rest_framework import viewsets
-# from rest_framework import permissions
-# from .api.serializers import KennelSerializer
+from django.views.generic import TemplateView
+from django.contrib import messages
+from django.contrib.auth.models import User
+from core.views import MainContentView
+from django.template.loader import render_to_string
+from django.db import models
+from rest_framework import viewsets
+from rest_framework import permissions
+from .api.serializers import KennelSerializer
 
-# @login_required
-# def view_kennel(request, kennel_name):
-#     '''
-#     Kennel profile
-#     '''
-#     # Get kennel
-#     try:
-#         kennel = Kennel.objects.get(kennel_name=kennel_name)
-#     except Kennel.DoesNotExist:
-#         return HttpResponseRedirect(reverse('kennels'))
-#     else:
-#         # Get kennel members
-#         kennel_membership = KennelMembership.objects.filter(
-#             membership_kennel=kennel)
-#         try:
-#             # Get user's membership
-#             my_membership: KennelMembership = kennel_membership.get(
-#                 membership_member=request.user.member)
-#             # Get admin info
-#             if my_membership.membership_is_admin:
-#                 active_consensuses = [{
-#                     'consensus':
-#                     c,
-#                     'my_vote':
-#                     get_instance_or_none(KennelConsensusVote,
-#                                          vote_consensus=c,
-#                                          vote_elector=request.user.member)
-#                 } for c in KennelConsensus.objects.filter(
-#                     consensus_kennel=kennel, consensus_result__isnull=True)]
-#                 consensus_members = [
-#                     c['consensus'].consensus_member for c in active_consensuses
-#                 ]
-#                 # Render admin info
-#                 print(active_consensuses)
-#                 return handle_partial_render(
-#                     request, 'kennels/kennel/kennel.html', {
-#                         'kennel': kennel,
-#                         'my_membership': my_membership,
-#                         'kennel_membership': kennel_membership,
-#                         'active_consensuses': active_consensuses,
-#                         'consensus_members': consensus_members
-#                     }, 'kennels/kennels_base.html', kennel.kennel_name)
-#         except KennelMembership.DoesNotExist:
-#             my_membership = False
-#         # render non-admin info
-#         return handle_partial_render(
-#             request, 'kennels/kennel/kennel.html', {
-#                 'kennel': kennel,
-#                 'my_membership': my_membership,
-#                 'kennel_membership': kennel_membership,
-#             }, 'kennels/kennels_base.html', kennel.kennel_name)
+from . import models
+
+
+@login_required
+def view_kennel(request, name):
+    '''
+    Kennel profile
+    '''
+    # Get kennel
+    try:
+        kennel = models.Kennel.objects.get(name=name)
+    except models.Kennel.DoesNotExist:
+        return redirect('kennels')
+        # Get user's membership
+    my_membership: models.Membership = kennel.memberships.filter(
+        user=request.user)
+    if my_membership.exists():
+        my_membership = my_membership.get()
+        active_topbar = kennel.acronym
+    else:
+        my_membership = None
+        active_topbar = 'Kennels'
+
+    base_view = MainContentView(
+        template='kennels/kennel.html',
+        page_title=kennel.name,
+    )
+    return base_view.get(
+        request=request,
+        context={
+            'kennel': kennel,
+            'my_membership': my_membership,
+            'active_sidebar': 'Kennels',
+            'active_topbar': active_topbar
+        },
+    )
+
 
 # @login_required
 # def view_create_kennel(request):
@@ -96,31 +80,23 @@
 #     return handle_partial_render(request, 'kennels/kennel_create.html',
 #                                  {'form': f}, 'kennels/kennels_base.html',
 #                                  "Create New Kennel")
+@login_required
+def view_kennels(request):
+    '''
+    Profile search list
+    '''
+    base_view = MainContentView(
+        template='kennels/kennel_list.html',
+        page_title=_('Kennels'),
+    )
+    return base_view.get(
+        request=request,
+        context={
+            'active_sidebar': 'Kennels',
+            'active_topbar': 'Kennels'
+        },
+    )
 
-# class kennelListView(TemplateView):
-#     '''
-#     Returns search table for kennels
-#     '''
-#     template_name = 'kennels/kennel_list.html'
-#     user_kennels = False
-#     kennels = []
-
-#     def get(self, request):
-#         # Get all kennels
-#         if not self.user_kennels:
-#             self.kennels = Kennel.objects.all()
-#             title = 'Kennels'
-#             color = 'pink'
-#         # Get only member's kennels
-#         else:
-#             self.kennels = request.user.member.member_kennels.all()
-#             title = 'My Kennels'
-#             color = 'green'
-#         return handle_partial_render(request, self.template_name, {
-#             'kennels': self.kennels,
-#             'title': title,
-#             'color': color
-#         }, 'kennels/kennels_base.html', title)
 
 # @login_required
 # def postMembershipResponse(request):

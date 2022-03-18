@@ -1,7 +1,7 @@
 {% extends 'helpers/search_table.html' %}
 
 {% block table_wrapper %}
-{% with color='blue' title='Hashers' get_url='/api/users/' row_func='profile_table_row_html' %}
+{% with color='blue' title='Hashers' get_url='/api/memberships/' row_func='kennel_members_table_row_html' %}
 {{ block.super }}
 {% endwith %}
 {% endblock %}
@@ -19,7 +19,6 @@
         html += `</td></tr>`
         return html
     }
-
 </script>
 {% endblock trow_func %}
 

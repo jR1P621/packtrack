@@ -1,0 +1,31 @@
+{% extends 'helpers/search_table.html' %}
+
+{% block table_wrapper %}
+{% with color='pink' title='Kennels' get_url='/api/kennels/' row_func='kennel_table_row_html' %}
+{{ block.super }}
+{% endwith %}
+{% endblock %}
+
+{% block trow_func %}
+<script>
+    function kennel_table_row_html(record) {
+        html = `<tr>` +
+            `<td class="no-user-select">${record.is_active ? '<span title="Active">🏃</span>' : '<span title="Inactive">💤</span>'}</td>` +
+            `<td><a class='intercept ${record.is_active ? '' : ' text-muted' }' href="/kennels/${record.name}">${record.name}</a></td>` +
+            `<td class=${record.is_active ? '' : ' text-muted' }>${record.acronym}</td>` +
+            `<td class=${record.is_active ? '' : ' text-muted' }>${record.city}</td>` +
+            `</tr>`
+        return html
+    }
+
+</script>
+{% endblock trow_func %}
+
+{% block thead %}
+<tr class="header">
+    <th class='col-sm-0'></th>
+    <th class='col-sm-6'>Kennel</th>
+    <th class='col-sm-2'>Acronym</th>
+    <th class='col-sm-6'>Location</th>
+</tr>
+{% endblock thead %}

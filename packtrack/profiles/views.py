@@ -10,12 +10,10 @@ from . import models, forms
 
 
 @login_required
-def edit_profile(request, username):
+def edit_profile(request):
     '''
     Profile edit page.
     '''
-    if username != request.user.username:
-        return redirect(profile)
     if request.method == 'POST':
         f = forms.EditProfileForm(
             request.POST,

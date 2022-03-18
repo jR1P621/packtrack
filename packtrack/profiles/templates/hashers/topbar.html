@@ -6,7 +6,7 @@
             <ul class="text-uppercase">
                 {% url 'hashers' as hashers_url %}
                 {% url 'profile' username=user.username as profile_url %}
-                {% url 'edit_profile' username=user.username as edit_url %}
+                {% url 'edit_profile' as edit_url %}
                 {% include 'helpers/bar_link.html' with location='topbar' text='Hashers' url=hashers_url %}
                 {% include 'helpers/bar_link.html' with location='topbar' text='My Profile' url=profile_url %}
                 {% include 'helpers/bar_link.html' with location='topbar' text='Edit Profile' url=edit_url %}

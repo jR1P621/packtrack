@@ -1,0 +1,16 @@
+<div class="templatemo-content-widget white-bg col-2">
+    <h2 class="text-center">{{kennel.acronym}}</h2>
+    {% comment %} {% include 'kennels/kennel/membership_button.html' %} {% endcomment %}
+    {% if kennel.image %}
+    {% include 'widgets/kennel_image_widget.html' %}
+    {% endif %}
+    <div class='templatemo-content-widget'>
+        {% if kennel.about %}
+
+        {% elif my_membership.is_admin %}
+        <p class='text-muted text-center'>Hey Administrator! Fill this out!</p>
+        {% else %}
+        <p class='text-muted text-center'>No kennel description</p>
+        {% endif %}
+    </div>
+</div>

@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.urls import reverse
-from .settings import MAX_AVATAR_SIZE
+from .settings import MAX_AVATAR_RATIO, MAX_AVATAR_SIZE
 
 import datetime
 
@@ -32,14 +32,23 @@ class Profile(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        # Rescale avatar to max 800px
+
+        # Rescale avatar to max and crop if user uploads ridiculous dims
         new_avatar = self.avatar
         if new_avatar:
             image = Image.open(self.avatar)
-            (width, height) = image.size
-            if (height > width):
+            width, height = image.size
+            if width / height > MAX_AVATAR_RATIO:
+                width_offset = (width - (height * MAX_AVATAR_RATIO)) // 2
+                image.crop(box=(width_offset, 0, width - width_offset, height))
+            elif height / width > MAX_AVATAR_RATIO:
+                height_offset = (height - (width * MAX_AVATAR_RATIO)) // 2
+                image.crop(box=(height_offset, 0, height - height_offset,
+                                width))
+            factor = 1.0
+            if MAX_AVATAR_SIZE < height > width:
                 factor = MAX_AVATAR_SIZE / height
-            else:
+            elif MAX_AVATAR_SIZE < width > height:
                 factor = MAX_AVATAR_SIZE / width
             size = (int(width * factor), int(height * factor))
             image = image.resize(size, Image.ANTIALIAS)

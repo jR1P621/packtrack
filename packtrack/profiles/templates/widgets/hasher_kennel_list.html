@@ -10,7 +10,7 @@
 <script>
     function kennel_list_row_html(record) {
         html = `<tr>` +
-            `<td><a class='intercept' href="/kennels/profile/${record['name']}">${record['name']}</a></td>` +
+            `<td><a class='intercept' href="/kennels/${record['name']}">${record['name']}</a></td>` +
             `</tr >`
         return html
     }

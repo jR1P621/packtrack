@@ -168,7 +168,7 @@ class ConsensusPermission(permissions.BasePermission):
         elif view.action == 'retrieve':
             return request.user in obj.kennel.get_kennel_admins()
         elif view.action == 'destroy':
-            return request.user == obj.initiator and not obj.final_vote
+            return request.user == obj.initiator
         else:
             return False
 
@@ -189,8 +189,8 @@ class ConsensusViewSet(MultiClassModelViewSet):
     filterset_fields = [
         'kennel__name', 'kennel__acronym', 'type',
         'membership__user__username', 'membership__user__profile__hash_name',
-        'initiator__user__username', 'initiator__user__profile__hash_name',
-        'event__name', 'event__host__name', 'event__host__acronym', 'id'
+        'initiator__username', 'initiator__profile__hash_name', 'event__name',
+        'event__host__name', 'event__host__acronym', 'id'
     ]
     search_fields = [
         'kennel__name', 'kennel__acronym', 'membership__user__username',
@@ -291,9 +291,6 @@ class LegacyLongevityPermission(permissions.BasePermission):
 
     UPDATE:
     Kennel admins can modify legacy longevity for their kennel.
-
-    DESTROY:
-    Users can delete their own legacy longevity
     '''
 
     def has_permission(self, request, view):
@@ -302,9 +299,7 @@ class LegacyLongevityPermission(permissions.BasePermission):
         elif view.action == 'create':
             return models.Membership.objects.filter(user=request.user,
                                                     is_admin=True).exists()
-        elif view.action in [
-                'list', 'retrieve', 'update', 'partial_update', 'destroy'
-        ]:
+        elif view.action in ['list', 'retrieve', 'update', 'partial_update']:
             return True
         else:
             return False
@@ -316,8 +311,6 @@ class LegacyLongevityPermission(permissions.BasePermission):
             return True
         elif view.action in ['update', 'partial_update']:
             return request.user in obj.kennel.get_kennel_admins()
-        elif view.action == 'destroy':
-            return request.user == obj.user
         else:
             return False
 
@@ -333,9 +326,7 @@ class LegacyLongevityViewSet(MultiClassModelViewSet):
         'create': serializers.LegacyLongevityCreateSerializer
     }
     permission_classes = [LegacyLongevityPermission]
-    http_method_names = [
-        'get', 'head', 'options', 'post', 'put', 'patch', 'delete'
-    ]
+    http_method_names = ['get', 'head', 'options', 'post', 'put', 'patch']
     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
     filterset_fields = [
         'kennel__name', 'kennel__acronym', 'user__username',
