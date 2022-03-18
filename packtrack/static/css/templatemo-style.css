@@ -451,6 +451,8 @@ footer {
 	overflow-y: auto;
 	overflow-x: hidden;
 	max-height:90vh;
+	max-width: 1280px;
+	margin-inline: auto;
 }
 
 .templatemo-flex-row {
